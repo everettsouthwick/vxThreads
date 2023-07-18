@@ -51,7 +51,7 @@ export function generateMetadata(post: any, threadsPath: string) {
         const videoUrl = `https://${config.proxies[0]}/${encodeURIComponent(videos[0])}`;
         metadata.push(
             `<meta property="twitter:card" content="player" />`,
-            `<meta property="twitter:player" content="{${videoUrl}}">`,
+            `<meta property="twitter:player" content="${videoUrl}">`,
             `<meta property="twitter:player:width" content="${originalWidth}">`,
             `<meta property="twitter:player:height" content="${originalHeight}">`,
             `<meta property="og:type" content="video.other">`,
