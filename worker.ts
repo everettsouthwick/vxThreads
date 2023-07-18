@@ -14,6 +14,7 @@ async function buffer(request: Request): Promise<Response> {
 			"Accept": "video/webm,video/ogg,video/*;q=0.9,application/ogg;q=0.7,audio/*;q=0.6,*/*;q=0.5",
 			"Accept-Language": "en-US,en;q=0.5",
 			"Range": "bytes=0-",
+			"Referer": "https://threads.net",
 			"Alt-Used": "scontent.cdninstagram.com",
 			"Sec-Fetch-Dest": "video",
 			"Sec-Fetch-Mode": "no-cors",
@@ -24,7 +25,7 @@ async function buffer(request: Request): Promise<Response> {
 	const responseInit: ResponseInit = {
 		headers: {
 			"Content-Length": videoResponse.headers.get("Content-Length") ?? undefined,
-			"Content-Type": videoResponse.headers.get("Content-Type") ?? undefined,
+			"Content-Type": "video/mp4",
 			"Content-Disposition": 'attachment; filename="video.mp4"',
 		}
 	};

@@ -12,15 +12,13 @@ router.get('*', async (req, res) => {
 
         const metadata = generateMetadata(post, threadsPath);
         const html = postTemplate(
-            metadata.username,
-            metadata.metadata,
-            metadata.description,
+            metadata.metadata
         );
 
         return res.status(200).send(html);
     } catch (error: any) {
         console.error(error);
-        const html = errorTemplate(error.status, error.statusText);
+        const html = errorTemplate(error.status, error.statusText, `https://threads.net${threadsPath}`);
         return res.status(200).send(html);
     }
 });

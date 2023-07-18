@@ -22,6 +22,7 @@ export async function getPost(threadsPath: string) {
 }
 
 export function generateMetadata(post: any, threadsPath: string) {
+    const threadsUri = `https://threads.net${threadsPath}`;
     const avatar = post.user.profile_pic_url;
     const username = post.user.username;
     const caption = post.caption.text;
@@ -34,17 +35,19 @@ export function generateMetadata(post: any, threadsPath: string) {
     const originalWidth = post.original_width;
     const originalHeight = post.original_height;
 
-    const description = `${caption}\n\n${replyCount.toLocaleString()} replies &emsp; ${likeCount.toLocaleString()} likes`;
+    const description = `${caption}\n\n💬 ${replyCount.toLocaleString()}&emsp;❤️ ${likeCount.toLocaleString()}`;
 
     const metadata: string[] = [];
 
     metadata.push(
-        // `<link rel="canonical" href="https://threads.net${threadsPath}"/>`,
-        // `<meta http-equiv="refresh" content="0;url=https://threads.net${threadsPath}"/>`,
+        `<link rel="canonical" href="${threadsUri}"/>`,
+        `<meta http-equiv="refresh" content="0;url=${threadsUri}"/>`,
         `<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />`,
+        `<meta property="theme-color" content="#30d158" />`,
+        `<meta property="og:site_name" content="vxThreads" />`,
         `<meta property="og:title" content="@${username}" />`,
-        `<meta property="og:site_name" content="VxThreads" />`,
         `<meta property="og:description" content="${description}" />`,
+        `<meta property="og:url" content="${threadsUri}" />`,
     );
 
     if (videos.length > 0) {
