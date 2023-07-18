@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-import config from '../../config.json';
+import config from '../config.json';
 import { getPostIdPayload, getPostPayload } from '../api/fetcher';
 import { getPostIdHeaders, getPostHeaders } from '../api/headers';
 

@@ -23,8 +23,8 @@ async function buffer(request: Request): Promise<Response> {
 
 	const responseInit: ResponseInit = {
 		headers: {
-			"Content-Length": videoResponse.headers.get("Content-Length"),
-			"Content-Type": videoResponse.headers.get("Content-Type"),
+			"Content-Length": videoResponse.headers.get("Content-Length") ?? undefined,
+			"Content-Type": videoResponse.headers.get("Content-Type") ?? undefined,
 			"Content-Disposition": 'attachment; filename="video.mp4"',
 		}
 	};

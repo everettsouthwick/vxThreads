@@ -1,15 +1,27 @@
 # syntax=docker/dockerfile:1
-FROM node:18-alpine
-ENV NODE_ENV=production
 
+# Stage 1: Build
+FROM node:18-alpine AS builder
 WORKDIR /app
 
-COPY ["package.json", "yarn-lock.json*", "./"]
+COPY ["package.json", "yarn.lock", "./"]
 
-RUN yarn install --production=true
+# Install both production and development dependencies
+RUN yarn install
 
 COPY . .
 
+# Build the TypeScript app
 RUN yarn build
 
-CMD ["yarn", "start"]
+# Stage 2: Production
+FROM node:18-alpine
+ENV NODE_ENV=production
+WORKDIR /app
+
+# Copy from the builder stage the installed dependencies and the built app
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+COPY package.json ./
+
+CMD ["node", "dist/app.js"]
