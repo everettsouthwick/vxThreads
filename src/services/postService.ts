@@ -39,8 +39,8 @@ export function generateMetadata(post: any, threadsPath: string) {
     const metadata: string[] = [];
 
     metadata.push(
-        `<link rel="canonical" href="https://threads.net${threadsPath}"/>`,
-        `<meta http-equiv="refresh" content="0;url=https://threads.net${threadsPath}"/>`,
+        // `<link rel="canonical" href="https://threads.net${threadsPath}"/>`,
+        // `<meta http-equiv="refresh" content="0;url=https://threads.net${threadsPath}"/>`,
         `<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />`,
         `<meta property="og:title" content="@${username}" />`,
         `<meta property="og:site_name" content="VxThreads" />`,
