@@ -11,11 +11,15 @@ router.get('*', async (req, res) => {
         const post = await getPost(threadsPath);
 
         const metadata = generateMetadata(post, threadsPath);
-        const html = postTemplate(metadata.username, metadata.metadata, metadata.description);
+        const html = postTemplate(
+            metadata.username,
+            metadata.metadata,
+            metadata.description
+        );
 
         return res.status(200).send(html);
     } catch (error: any) {
-        console.log(error);
+        console.error(error);
         const html = errorTemplate(error.status, error.statusText);
         return res.status(200).send(html);
     }

@@ -6,8 +6,8 @@ export async function getPost(threadsPath: string) {
     const postId = await getPostId(threadsPath);
     const getPostBody = getPostPayload(postId);
 
-    const getPostResponse = await fetch("https://www.threads.net/api/graphql", {
-        method: "POST",
+    const getPostResponse = await fetch('https://www.threads.net/api/graphql', {
+        method: 'POST',
         headers: getPostHeaders(),
         body: getPostBody,
     });
@@ -26,7 +26,9 @@ export function generateMetadata(post: any, threadsPath: string) {
     const caption = post.caption.text;
     const likeCount = post.like_count ?? 0;
     const replyCount = post.text_post_app_info.direct_reply_count ?? 0;
-    const images = post.image_versions2.candidates.map((image: any) => image.url);
+    const images = post.image_versions2.candidates.map(
+        (image: any) => image.url
+    );
     const videos = post.video_versions.map((video: any) => video.url);
     const originalWidth = post.original_width;
     const originalHeight = post.original_height;
@@ -42,7 +44,7 @@ export function generateMetadata(post: any, threadsPath: string) {
         `<meta property="og:title" content="@${username}" />`,
         `<meta property="og:site_name" content="VxThreads" />`,
         `<meta property="og:description" content="${description}" />`
-    )
+    );
 
     if (videos.length > 0 && false) {
         metadata.push(
@@ -80,17 +82,20 @@ export function generateMetadata(post: any, threadsPath: string) {
     return {
         metadata,
         description,
-        username
+        username,
     };
 }
 
 async function getPostId(threadsPath: string) {
     const getPostIdBody = getPostIdPayload(threadsPath);
-    const getPostIdResponse = await fetch("https://www.threads.net/ajax/bulk-route-definitions/", {
-        method: "POST",
-        headers: getPostIdHeaders(),
-        body: getPostIdBody,
-    });
+    const getPostIdResponse = await fetch(
+        'https://www.threads.net/ajax/bulk-route-definitions/',
+        {
+            method: 'POST',
+            headers: getPostIdHeaders(),
+            body: getPostIdBody,
+        }
+    );
 
     if (!getPostIdResponse.ok) {
         throw new Error('Failed to get post id');
@@ -98,7 +103,9 @@ async function getPostId(threadsPath: string) {
 
     const responseText = await getPostIdResponse.text();
     const responseJson = JSON.parse(responseText.slice(9)); // removing "for (;;);"
-    const postId = responseJson.payload.payloads[threadsPath].result.exports.rootView.props.post_id;
+    const postId =
+        responseJson.payload.payloads[threadsPath].result.exports.rootView.props
+            .post_id;
 
     return postId;
 }
