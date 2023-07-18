@@ -27,7 +27,7 @@ export function generateMetadata(post: any, threadsPath: string) {
     const likeCount = post.like_count ?? 0;
     const replyCount = post.text_post_app_info.direct_reply_count ?? 0;
     const images = post.image_versions2.candidates.map(
-        (image: any) => image.url
+        (image: any) => image.url,
     );
     const videos = post.video_versions.map((video: any) => video.url);
     const originalWidth = post.original_width;
@@ -43,20 +43,10 @@ export function generateMetadata(post: any, threadsPath: string) {
         `<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />`,
         `<meta property="og:title" content="@${username}" />`,
         `<meta property="og:site_name" content="VxThreads" />`,
-        `<meta property="og:description" content="${description}" />`
+        `<meta property="og:description" content="${description}" />`,
     );
 
     if (videos.length > 0 && false) {
-        metadata.push(
-            `<meta property="twitter:player" content="${videos[0]}">`,
-            `<meta property="twitter:player:width" content="${originalWidth}">`,
-            `<meta property="twitter:player:height" content="${originalHeight}">`,
-            `<meta property="og:type" content="video.other">`,
-            `<meta property="og:video:url" content="${videos[0]}">`,
-            `<meta property="og:video:secure_url" content="${videos[0]}">`,
-            `<meta property="og:video:width" content="${originalWidth}">`,
-            `<meta property="og:video:height" content="${originalHeight}">`
-        );
     } else if (images.length > 0) {
         metadata.push(
             `<meta property="twitter:image" content="${images[0]}" />`,
@@ -65,7 +55,7 @@ export function generateMetadata(post: any, threadsPath: string) {
             `<meta property="twitter:image:width" content="${originalWidth}" />`,
             `<meta property="twitter:image:height" content="${originalHeight}" />`,
             `<meta property="og:image:width" content="${originalWidth}" />`,
-            `<meta property="og:image:height" content="${originalHeight}" />`
+            `<meta property="og:image:height" content="${originalHeight}" />`,
         );
     } else {
         metadata.push(
@@ -75,7 +65,7 @@ export function generateMetadata(post: any, threadsPath: string) {
             `<meta property="twitter:image:width" content="150" />`,
             `<meta property="twitter:image:height" content="150" />`,
             `<meta property="og:image:width" content="150" />`,
-            `<meta property="og:image:height" content="150" />`
+            `<meta property="og:image:height" content="150" />`,
         );
     }
 
@@ -94,7 +84,7 @@ async function getPostId(threadsPath: string) {
             method: 'POST',
             headers: getPostIdHeaders(),
             body: getPostIdBody,
-        }
+        },
     );
 
     if (!getPostIdResponse.ok) {

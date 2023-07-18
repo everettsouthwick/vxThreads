@@ -14,7 +14,7 @@ router.get('*', async (req, res) => {
         const html = postTemplate(
             metadata.username,
             metadata.metadata,
-            metadata.description
+            metadata.description,
         );
 
         return res.status(200).send(html);

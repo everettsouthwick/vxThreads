@@ -9,7 +9,9 @@ export function getPostIdPayload(threadsPath: string): string {
     return Object.keys(payload)
         .map(
             (key) =>
-                `${encodeURIComponent(key)}=${encodeURIComponent(payload[key])}`
+                `${encodeURIComponent(key)}=${encodeURIComponent(
+                    payload[key],
+                )}`,
         )
         .join('&');
 }
@@ -24,7 +26,9 @@ export function getPostPayload(postId: string): string {
     return Object.keys(payload)
         .map(
             (key) =>
-                `${encodeURIComponent(key)}=${encodeURIComponent(payload[key])}`
+                `${encodeURIComponent(key)}=${encodeURIComponent(
+                    payload[key],
+                )}`,
         )
         .join('&');
 }
