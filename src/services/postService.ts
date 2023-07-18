@@ -50,6 +50,7 @@ export function generateMetadata(post: any, threadsPath: string) {
     if (videos.length > 0) {
         const videoUrl = `https://${config.proxies[0]}/${encodeURIComponent(videos[0])}`;
         metadata.push(
+            `<meta property="twitter:card" content="player" />`,
             `<meta property="twitter:player" content="{${videoUrl}}">`,
             `<meta property="twitter:player:width" content="${originalWidth}">`,
             `<meta property="twitter:player:height" content="${originalHeight}">`,
@@ -61,21 +62,21 @@ export function generateMetadata(post: any, threadsPath: string) {
         );
     } else if (images.length > 0) {
         metadata.push(
-            `<meta property="twitter:image" content="${images[0]}" />`,
-            `<meta property="og:image" content="${images[0]}" />`,
             `<meta property="twitter:card" content="summary_large_image" />`,
+            `<meta property="twitter:image" content="${images[0]}" />`,
             `<meta property="twitter:image:width" content="${originalWidth}" />`,
             `<meta property="twitter:image:height" content="${originalHeight}" />`,
+            `<meta property="og:image" content="${images[0]}" />`,
             `<meta property="og:image:width" content="${originalWidth}" />`,
             `<meta property="og:image:height" content="${originalHeight}" />`,
         );
     } else {
         metadata.push(
-            `<meta property="twitter:image" content="${avatar}" />`,
-            `<meta property="og:image" content="${avatar}" />`,
             `<meta property="twitter:card" content="summary" />`,
+            `<meta property="twitter:image" content="${avatar}" />`,
             `<meta property="twitter:image:width" content="150" />`,
             `<meta property="twitter:image:height" content="150" />`,
+            `<meta property="og:image" content="${avatar}" />`,
             `<meta property="og:image:width" content="150" />`,
             `<meta property="og:image:height" content="150" />`,
         );
