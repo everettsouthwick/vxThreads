@@ -11,6 +11,9 @@ RUN yarn install
 
 COPY . .
 
+# Use the example config.json for building
+COPY ["config.example.json", "./src/config.json"]
+
 # Build the TypeScript app
 RUN yarn build
 
@@ -24,4 +27,4 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY package.json ./
 
-CMD ["node", "dist/app.js"]
+CMD ["node", "dist/index.js"]
