@@ -130,4 +130,4 @@ dist
 .pnp.*
 
 wrangler.toml
-config.json
+configtest.json
