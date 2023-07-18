@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+import config from '../../config.json';
 import { getPostIdPayload, getPostPayload } from '../api/fetcher';
 import { getPostIdHeaders, getPostHeaders } from '../api/headers';
 
@@ -46,7 +47,18 @@ export function generateMetadata(post: any, threadsPath: string) {
         `<meta property="og:description" content="${description}" />`,
     );
 
-    if (videos.length > 0 && false) {
+    if (videos.length > 0) {
+        const videoUrl = `https://${config.proxies[0]}/${encodeURIComponent(videos[0])}`;
+        metadata.push(
+            `<meta property="twitter:player" content="{${videoUrl}}">`,
+            `<meta property="twitter:player:width" content="${originalWidth}">`,
+            `<meta property="twitter:player:height" content="${originalHeight}">`,
+            `<meta property="og:type" content="video.other">`,
+            `<meta property="og:video:url" content="${videoUrl}">`,
+            `<meta property="og:video:secure_url" content="${videoUrl}">`,
+            `<meta property="og:video:width" content="${originalWidth}">`,
+            `<meta property="og:video:height" content="${originalHeight}">`
+        );
     } else if (images.length > 0) {
         metadata.push(
             `<meta property="twitter:image" content="${images[0]}" />`,
