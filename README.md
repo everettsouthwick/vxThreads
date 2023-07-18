@@ -1,2 +1,2 @@
 # vxthreads
-Embed friendly version of threads.net
+Embed friendly version for Discord of threads.net
