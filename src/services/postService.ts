@@ -114,9 +114,14 @@ async function getPostId(threadsPath: string) {
 
     const responseText = await getPostIdResponse.text();
     const responseJson = JSON.parse(responseText.slice(9)); // removing "for (;;);"
-    const postId =
-        responseJson.payload.payloads[threadsPath].result.exports.rootView.props
+    let postId;
+    if ('redirect_result' in responseJson.payload.payloads[threadsPath].result) {
+        postId = responseJson.payload.payloads[threadsPath].result.redirect_result.exports.rootView.props
             .post_id;
+    } else {
+        postId = responseJson.payload.payloads[threadsPath].result.exports.rootView.props
+            .post_id;
+    }
 
     return postId;
 }
