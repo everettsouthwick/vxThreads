@@ -1,8 +1,9 @@
 import express, { NextFunction, Request, Response } from 'express';
 import routes from './controllers';
+import { ConfigManager } from './managers/configManager';
 
 const app = express();
-const port = 9731;
+const port = ConfigManager.getInstance().getPort();
 
 // Middlewares
 app.use(express.json());

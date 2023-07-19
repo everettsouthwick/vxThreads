@@ -1,5 +1,5 @@
 import { Constants } from "../constants/constants";
-import { ProxyManager } from "../helpers/proxy";
+import { ProxyManager } from "../managers/proxyManager";
 
 export function buildPostMetadata(post: any, url: URL): string[] {
     const profilePicUrl = post.user.profile_pic_url;
