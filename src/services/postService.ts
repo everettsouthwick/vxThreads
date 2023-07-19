@@ -36,8 +36,8 @@ export function generateMetadata(post: any, threadsPath: string) {
     );
 
     let videos = [];
-    if (post.carousel_media !== null && post.carousel_media !== undefined) {
-        videos = post.carousel_media.video_versions.map((video: any) => video.url);
+    if (post.carousel_media !== null) {
+        videos = post.carousel_media[0].video_versions.map((video: any) => video.url);
     } else {
         videos = post.video_versions.map((video: any) => video.url);
     }
