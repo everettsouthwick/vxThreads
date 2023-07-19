@@ -127,7 +127,7 @@ function consolidatePost(post: Post): Post {
 
         p.sharedPosts.forEach(p2 => {
             if (p2.isQuoted) {
-                if (post.caption) {
+                if (p2.caption) {
                     post.caption = `${post.caption}\n\n⤵️ Quoting @${p2.username}\n\n${p2.caption}`;
                 }
             } else if (p2.isRepost) {
