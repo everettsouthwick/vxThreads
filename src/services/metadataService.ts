@@ -56,7 +56,6 @@ function buildVideoPostMetadata(post: Post): string[] {
 
 function buildImagePostMetadata(post: Post): string[] {
     return [
-        `<link href="https://vxthreads.net/oembed?text=${encodeURIComponent(Constants.DefaultAuthorName)}&url=${encodeURIComponent(post.url.toString() ?? Constants.DefaultAuthorUrl)}" rel="alternate" type="application/json+oembed" title="vxThreads" />`,
         `<meta property="twitter:card" content="summary_large_image" />`,
         `<meta property="twitter:image" content="${post.imageUrls[0]}" />`,
         `<meta property="twitter:image:width" content="${post.originalWidth}" />`,
@@ -69,7 +68,6 @@ function buildImagePostMetadata(post: Post): string[] {
 
 function buildTextPostMetadata(post: Post): string[] {
     return [
-        `<link href="https://vxthreads.net/oembed?text=${encodeURIComponent(Constants.DefaultAuthorName)}&url=${encodeURIComponent(post.url.toString() ?? Constants.DefaultAuthorUrl)}" rel="alternate" type="application/json+oembed" title="vxThreads" />`,
         `<meta property="twitter:card" content="summary" />`,
         `<meta property="twitter:image" content="${post.profilePicUrl}" />`,
         `<meta property="twitter:image:width" content="150" />`,
@@ -90,7 +88,6 @@ function buildDefaultUserMetadata(user: User): string[] {
         `<meta property="og:title" content="${user.fullName} (@${user.username})" />`,
         `<meta property="og:description" content="${user.description}" />`,
         `<meta property="og:url" content="${user.url}" />`,
-        `<link href="https://vxthreads.net/oembed?text=${encodeURIComponent(Constants.DefaultAuthorName)}&url=${encodeURIComponent(user.url.toString() ?? Constants.DefaultAuthorUrl)}" rel="alternate" type="application/json+oembed" title="vxThreads" />`,
         `<meta property="twitter:card" content="summary" />`,
         `<meta property="twitter:image" content="${user.profilePicUrl}" />`,
         `<meta property="twitter:image:width" content="150" />`,
