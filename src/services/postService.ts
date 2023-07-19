@@ -126,7 +126,7 @@ function consolidatePost(post: Post): Post {
         post.originalWidth > p.originalWidth ? post.originalWidth : p.originalWidth;
 
         p.sharedPosts.forEach(p2 => {
-            if (p2.isQuoted) {
+            if (p2.isQuoted && p.username !== p2.username) {
                 post.caption = `${post.caption}\n\n⤵️ Quoting @${p2.username}\n\n${p2.caption}`;
             } else if (p2.isRepost) {
                 if (post.caption === '') {
@@ -144,6 +144,8 @@ function consolidatePost(post: Post): Post {
         });
     });
 
+    post.hasImage = post.imageUrls.length > 0;
+    post.hasVideo = post.videoUrls.length > 0;
     post.engagement = `💬 ${post.replyCount.toLocaleString()}&emsp;❤️ ${post.likeCount.toLocaleString()}`;
     post.description = `${post.caption}\n\n${post.engagement}`;
 
