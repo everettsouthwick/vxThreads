@@ -90,10 +90,12 @@ function buildQuotedPost(post: any, url: URL): Post {
     const quotedPost = buildPost(post.text_post_app_info.share_info.quoted_post, url);
 
     if (quotedPost.hasImage) {
+        originalPost.hasImage = true;
         originalPost.imageUrls.unshift(...quotedPost.imageUrls);
     }
 
     if (quotedPost.hasVideo) {
+        originalPost.hasVideo = true;
         originalPost.videoUrls.unshift(...quotedPost.videoUrls);
     }
 
