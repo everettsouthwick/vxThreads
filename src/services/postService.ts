@@ -20,18 +20,9 @@ async function getPost(url: URL): Promise<Post> {
     const posts = threadItems.filter((item: any) => item.post !== null && item.post !== undefined);
 
     const post = posts[posts.length - 1].post;
-    let postObj: Post;
-    if (post.text_post_app_info?.share_info?.quoted_post !== null) {
-        postObj = buildQuotedPost(post, url);
-    }
-    else if (post.text_post_app_info?.share_info?.reposted_post !== null && post.text_post_app_info?.share_info?.text_post_app_info?.share_info?.quoted_post !== null) {
-        postObj = buildQuotedPost(post.text_post_app_info.share_info.reposted_post, url);
-    } else if (post.text_post_app_info?.share_info?.reposted_post !== null) {
-        postObj = buildPost(post.text_post_app_info.share_info.reposted_post, url);
-    } else {
-        postObj = buildPost(post, url);
-    }
-    return postObj;
+    const builtPost = buildPost(post, url);
+    console.log(builtPost.sharedPosts[0]);
+    return buildPost(post, url);
 }
 
 async function getPostId(url: URL): Promise<string> {
@@ -50,9 +41,9 @@ async function getPostId(url: URL): Promise<string> {
 function buildPost(post: any, url: URL): Post {
     const profilePicUrl = post?.user?.profile_pic_url ?? '';
     const username = post?.user?.username ?? '';
-    const caption = post?.caption?.text ?? '';
-    const likeCount = post?.like_count ?? 0;
-    const replyCount = post?.text_post_app_info?.direct_reply_count ?? 0;
+    let caption = post?.caption?.text ?? '';
+    let likeCount = post?.like_count ?? 0;
+    let replyCount = post?.text_post_app_info?.direct_reply_count ?? 0;
     const imageUrls = post?.image_versions2?.candidates?.map(
         (image: any) => image?.url,
     ) ?? [];
@@ -66,6 +57,30 @@ function buildPost(post: any, url: URL): Post {
 
     const originalWidth = post?.original_width ?? 640;
     const originalHeight = post?.original_height ?? 640;
+
+    const sharedPosts: Post[] = buildNestedPost(post, url) ?? [];
+
+    sharedPosts.forEach(firstLevelPost => {
+        if (firstLevelPost.isQuoted) {
+            caption = `${caption}\n\n⤵️ Quoting @${firstLevelPost.username}\n\n${firstLevelPost.caption}`
+        } else {
+            likeCount += firstLevelPost.likeCount;
+            replyCount += firstLevelPost.replyCount;
+        }
+
+        imageUrls.unshift(...firstLevelPost.imageUrls);
+        videoUrls.unshift(...firstLevelPost.videoUrls);
+        firstLevelPost.sharedPosts.forEach(secondLevelPost => {
+            if (secondLevelPost.isQuoted) {
+                caption = `${caption}\n\n⤵️ Quoting @${secondLevelPost.username}\n\n${secondLevelPost.caption}`
+            } else {
+                likeCount += secondLevelPost.likeCount;
+                replyCount += secondLevelPost.replyCount;
+            }
+            imageUrls.unshift(...secondLevelPost.imageUrls);
+            videoUrls.unshift(...secondLevelPost.videoUrls);
+        });
+    });
 
     const engagement = `💬 ${replyCount.toLocaleString()}&emsp;❤️ ${likeCount.toLocaleString()}`;
     const description = `${caption}\n\n${engagement}`;
@@ -85,39 +100,26 @@ function buildPost(post: any, url: URL): Post {
         engagement: engagement,
         description: description,
         url: url.toString(),
+        sharedPosts: sharedPosts,
+        isQuoted: false,
+        isRepost: false,
     };
 }
 
-function buildQuotedPost(post: any, url: URL): Post {
-    const originalPost = buildPost(post, url);
-    const quotedPost = buildPost(post.text_post_app_info.share_info.quoted_post, url);
+function buildNestedPost(post: any, url: URL): Post[] {
+    let posts: Post[] = [];
 
-    if (quotedPost.hasImage) {
-        originalPost.hasImage = true;
-        originalPost.imageUrls.unshift(...quotedPost.imageUrls);
+    if (post?.text_post_app_info?.share_info?.quoted_post) {
+        let nestedPost = buildPost(post?.text_post_app_info?.share_info?.quoted_post, url);
+        nestedPost.isQuoted = true;
+        posts.push(nestedPost);
     }
 
-    if (quotedPost.hasVideo) {
-        originalPost.hasVideo = true;
-        originalPost.videoUrls.unshift(...quotedPost.videoUrls);
+    if (post?.text_post_app_info?.share_info?.reposted_post) {
+        let nestedPost = buildPost(post?.text_post_app_info?.share_info?.reposted_post, url);
+        nestedPost.isRepost = true;
+        posts.push(nestedPost);
     }
 
-    originalPost.description = `${originalPost.caption}\n\n⤵️ Quoting @${quotedPost.username}\n\n${quotedPost.caption}\n\n${originalPost.engagement}`
-
-    return {
-        profilePicUrl: originalPost.profilePicUrl,
-        username: originalPost.username,
-        caption: originalPost.caption,
-        likeCount: originalPost.likeCount,
-        replyCount: originalPost.replyCount,
-        imageUrls: originalPost.imageUrls,
-        hasImage: originalPost.hasImage,
-        videoUrls: originalPost.videoUrls,
-        hasVideo: originalPost.hasVideo,
-        originalWidth: originalPost.originalWidth,
-        originalHeight: originalPost.originalHeight,
-        engagement: originalPost.engagement,
-        description: originalPost.description,
-        url: originalPost.url,
-    }
+    return posts;
 }

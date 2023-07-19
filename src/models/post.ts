@@ -13,4 +13,7 @@ export interface Post {
     engagement: string,
     description: string,
     url: string,
+    sharedPosts: Post[],
+    isQuoted: boolean,
+    isRepost: boolean,
 }
