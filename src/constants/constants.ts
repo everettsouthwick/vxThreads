@@ -1,4 +1,6 @@
 export const Constants = {
+    DefaultAuthorName: "Threads",
+    DefaultAuthorUrl: "https://threads.net",
     ErrorColor: "#ff443a",
     GitHubUrl: "https://github.com/everettsouthwick/vxthreads",
     SiteName: "vxThreads",

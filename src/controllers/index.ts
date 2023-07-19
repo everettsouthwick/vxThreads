@@ -1,9 +1,11 @@
 import express from "express";
 const router = express.Router();
 import oembedController from "./oembedController";
-import threadRoutes from "../routes/threadRoutes";
+import postController from "./postController";
+import userController from "./userController";
 
 router.use("/", oembedController);
-router.use("/", threadRoutes);
+router.use("/", postController);
+router.use("/", userController);
 
 export default router;

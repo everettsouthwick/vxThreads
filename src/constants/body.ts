@@ -1,6 +1,6 @@
-export function getPostIdPayload(threadsPath: string): string {
+export function buildBulkRouteDefinitionsBody(url: URL): string {
     const payload: any = {
-        'route_urls[0]': threadsPath,
+        'route_urls[0]': url.pathname,
         __a: '1',
         __comet_req: '29',
         lsd: 'XudMkvWGqcnLxbgeR25f3V',
@@ -16,7 +16,7 @@ export function getPostIdPayload(threadsPath: string): string {
         .join('&');
 }
 
-export function getPostPayload(postId: string): string {
+export function buildPostPayload(postId: string): string {
     const payload: any = {
         lsd: 'XudMkvWGqcnLxbgeR25f3V',
         variables: `{'postID':'${postId}'}`,
@@ -32,3 +32,21 @@ export function getPostPayload(postId: string): string {
         )
         .join('&');
 }
+
+export function buildUserPayload(userId: string): string {
+    const payload: any = {
+        lsd: 'KvS5OIjJwPDOa5R2p-MXJM',
+        variables: `{'userID':'${userId}'}`,
+        doc_id: '23996318473300828',
+    };
+
+    return Object.keys(payload)
+        .map(
+            (key) =>
+                `${encodeURIComponent(key)}=${encodeURIComponent(
+                    payload[key],
+                )}`,
+        )
+        .join('&');
+}
+
