@@ -126,8 +126,10 @@ function consolidatePost(post: Post): Post {
         post.originalWidth > p.originalWidth ? post.originalWidth : p.originalWidth;
 
         p.sharedPosts.forEach(p2 => {
-            if (p2.isQuoted && p.username !== p2.username) {
-                post.caption = `${post.caption}\n\n⤵️ Quoting @${p2.username}\n\n${p2.caption}`;
+            if (p2.isQuoted) {
+                if (post.caption) {
+                    post.caption = `${post.caption}\n\n⤵️ Quoting @${p2.username}\n\n${p2.caption}`;
+                }
             } else if (p2.isRepost) {
                 if (post.caption === '') {
                     post.profilePicUrl = p2.profilePicUrl;
