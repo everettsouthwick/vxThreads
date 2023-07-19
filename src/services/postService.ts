@@ -43,7 +43,7 @@ export function generateMetadata(post: any, threadsPath: string) {
 
     metadata.push(
         `<link rel="canonical" href="${threadsUri}"/>`,
-        `<link href="https://vxthreads.net/oembed?text=${encodeURIComponent(engagement)}&url=${encodeURIComponent(threadsUri)}" rel="alternate" type="application/json+oembed" title="vxThreads" />`,
+        `<link href="https://vxthreads.net/oembed?text=${encodeURIComponent(description)}&url=${encodeURIComponent(threadsUri)}" rel="alternate" type="application/json+oembed" title="vxThreads" />`,
         `<meta http-equiv="refresh" content="0;url=${threadsUri}"/>`,
         `<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />`,
         `<meta property="theme-color" content="${Constants.SuccessColor}" />`,
