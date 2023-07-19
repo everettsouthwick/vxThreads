@@ -6,14 +6,14 @@ import { User } from "../models/user";
 export function buildPostMetadata(post: Post): string[] {
     const metadata: string[] = [];
 
-    metadata.concat(buildDefaultPostMetadata(post));
+    metadata.push(...buildDefaultPostMetadata(post));
 
     if (post.hasVideo) {
-        metadata.concat(buildVideoPostMetadata(post));
+        metadata.push(...buildVideoPostMetadata(post));
     } else if (post.hasImage) {
-        metadata.concat(buildImagePostMetadata(post));
+        metadata.push(...buildImagePostMetadata(post));
     } else {
-        metadata.concat(buildTextPostMetadata(post));
+        metadata.push(...buildTextPostMetadata(post));
     }
 
     return metadata;
