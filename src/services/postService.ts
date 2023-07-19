@@ -43,7 +43,6 @@ export function generateMetadata(post: any, threadsPath: string) {
 
     metadata.push(
         `<link rel="canonical" href="${threadsUri}"/>`,
-        `<link href="https://vxthreads.net/oembed?text=${encodeURIComponent(description)}&url=${encodeURIComponent(threadsUri)}" rel="alternate" type="application/json+oembed" title="vxThreads" />`,
         `<meta http-equiv="refresh" content="0;url=${threadsUri}"/>`,
         `<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />`,
         `<meta property="theme-color" content="${Constants.SuccessColor}" />`,
@@ -56,6 +55,7 @@ export function generateMetadata(post: any, threadsPath: string) {
     if (videos.length > 0) {
         const videoUrl = `https://${config.proxies[0]}/${encodeURIComponent(videos[0])}`;
         metadata.push(
+            `<link href="https://vxthreads.net/oembed?text=${encodeURIComponent(description)}&url=${encodeURIComponent(threadsUri)}" rel="alternate" type="application/json+oembed" title="vxThreads" />`,
             `<meta property="twitter:card" content="player" />`,
             `<meta property="twitter:player" content="${videoUrl}">`,
             `<meta property="twitter:player:width" content="${originalWidth}">`,
@@ -68,6 +68,7 @@ export function generateMetadata(post: any, threadsPath: string) {
         );
     } else if (images.length > 0) {
         metadata.push(
+            `<link href="https://vxthreads.net/oembed?text=${encodeURIComponent('')}&url=${encodeURIComponent(threadsUri)}" rel="alternate" type="application/json+oembed" title="vxThreads" />`,
             `<meta property="twitter:card" content="summary_large_image" />`,
             `<meta property="twitter:image" content="${images[0]}" />`,
             `<meta property="twitter:image:width" content="${originalWidth}" />`,
@@ -78,6 +79,7 @@ export function generateMetadata(post: any, threadsPath: string) {
         );
     } else {
         metadata.push(
+            `<link href="https://vxthreads.net/oembed?text=${encodeURIComponent('')}&url=${encodeURIComponent(threadsUri)}" rel="alternate" type="application/json+oembed" title="vxThreads" />`,
             `<meta property="twitter:card" content="summary" />`,
             `<meta property="twitter:image" content="${avatar}" />`,
             `<meta property="twitter:image:width" content="150" />`,
