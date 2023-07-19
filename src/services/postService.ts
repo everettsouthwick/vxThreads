@@ -53,39 +53,44 @@ function buildPost(post: any, url: URL): Post {
         videoUrls = post?.video_versions?.map((video: any) => video?.url) ?? [];
     }
 
-    const originalWidth = post?.original_width ?? 640;
-    const originalHeight = post?.original_height ?? 640;
+    let originalWidth = post?.original_width ?? 640;
+    let originalHeight = post?.original_height ?? 640;
 
     const sharedPosts: Post[] = buildNestedPost(post, url) ?? [];
 
-    sharedPosts.forEach(firstLevelPost => {
-        if (firstLevelPost.isQuoted) {
-            caption = `${caption}\n\n⤵️ Quoting @${firstLevelPost.username}\n\n${firstLevelPost.caption}`
+    sharedPosts.forEach(p2 => {
+        profilePicUrl = profilePicUrl || p2.profilePicUrl;
+        username = username || p2.username;
+        imageUrls.unshift(...p2.imageUrls);
+        videoUrls.unshift(...p2.videoUrls);
+        originalHeight > p2.originalHeight ? originalHeight : p2.originalHeight;
+        originalWidth > p2.originalWidth ? originalWidth : p2.originalWidth;
+
+        if (p2.isQuoted) {
+            caption = `${caption}\n\n⤵️ Quoting @${p2.username}\n\n${p2.caption}`
         } else {
-            if (profilePicUrl === '') {
-                profilePicUrl = firstLevelPost.profilePicUrl;
-            }
-            if (username === '') {
-                username = firstLevelPost.username;
-            }
-            if (caption === '') {
-                caption = firstLevelPost.caption;
-            }
-            likeCount += firstLevelPost.likeCount;
-            replyCount += firstLevelPost.replyCount;
+            caption === '' ? caption = p2.caption : caption;
+            likeCount += p2.likeCount;
+            replyCount += p2.replyCount;
         }
 
-        imageUrls.unshift(...firstLevelPost.imageUrls);
-        videoUrls.unshift(...firstLevelPost.videoUrls);
-        firstLevelPost.sharedPosts.forEach(secondLevelPost => {
-            if (secondLevelPost.isQuoted) {
-                caption = `${caption}\n\n⤵️ Quoting @${secondLevelPost.username}\n\n${secondLevelPost.caption}`
+        p2.sharedPosts.forEach(p3 => {
+            profilePicUrl = profilePicUrl || p3.profilePicUrl;
+            username = username || p3.username;
+            imageUrls.unshift(...p3.imageUrls);
+            videoUrls.unshift(...p3.videoUrls);
+            originalHeight > p3.originalHeight ? originalHeight : p3.originalHeight;
+            originalWidth > p3.originalWidth ? originalWidth : p3.originalWidth;
+
+            if (p3.isQuoted) {
+                caption = `${caption}\n\n⤵️ Quoting @${p3.username}\n\n${p3.caption}`
             } else {
-                likeCount += secondLevelPost.likeCount;
-                replyCount += secondLevelPost.replyCount;
+                caption === '' ? caption = p3.caption : caption;
+                likeCount += p3.likeCount;
+                replyCount += p3.replyCount;
             }
-            imageUrls.unshift(...secondLevelPost.imageUrls);
-            videoUrls.unshift(...secondLevelPost.videoUrls);
+            imageUrls.unshift(...p3.imageUrls);
+            videoUrls.unshift(...p3.videoUrls);
         });
     });
 
