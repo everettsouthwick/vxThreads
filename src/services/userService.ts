@@ -25,11 +25,11 @@ async function getUserId(url: URL): Promise<string> {
 }
 
 function buildUser(user: any, url: URL): User {
-    const profilePicUrl = user.profile_pic_url ?? '';
-    const username = user.username ?? '';
-    const biography = user.biography ?? '';
-    const followerCount = user.follower_count ?? 0;
-    const fullName = user.full_name ?? '';
+    const profilePicUrl = user?.profile_pic_url ?? '';
+    const username = user?.username ?? '';
+    const biography = user?.biography ?? '';
+    const followerCount = user?.follower_count ?? 0;
+    const fullName = user?.full_name ?? '';
 
     const engagement = `📢 ${followerCount.toLocaleString()}`;
     const description = `${biography}\n\n${engagement}`;

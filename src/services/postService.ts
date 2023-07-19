@@ -48,24 +48,24 @@ async function getPostId(url: URL): Promise<string> {
 }
 
 function buildPost(post: any, url: URL): Post {
-    const profilePicUrl = post.user?.profile_pic_url ?? '';
-    const username = post.user?.username ?? '';
-    const caption = post.caption?.text ?? '';
-    const likeCount = post.like_count ?? 0;
-    const replyCount = post.reply_count ?? 0;
-    const imageUrls = post.image_versions2.candidates.map(
-        (image: any) => image.url,
-    );
+    const profilePicUrl = post?.user?.profile_pic_url ?? '';
+    const username = post?.user?.username ?? '';
+    const caption = post?.caption?.text ?? '';
+    const likeCount = post?.like_count ?? 0;
+    const replyCount = post?.text_post_app_info?.direct_reply_count ?? 0;
+    const imageUrls = post?.image_versions2?.candidates?.map(
+        (image: any) => image?.url,
+    ) ?? [];
 
     let videoUrls = [];
-    if (post.carousel_media !== null) {
-        videoUrls = post.carousel_media[0].video_versions.map((video: any) => video.url);
+    if (post?.carousel_media !== null) {
+        videoUrls = post?.carousel_media[0]?.video_versions?.map((video: any) => video?.url) ?? [];
     } else {
-        videoUrls = post.video_versions.map((video: any) => video.url);
+        videoUrls = post?.video_versions?.map((video: any) => video?.url) ?? [];
     }
 
-    const originalWidth = post.original_width;
-    const originalHeight = post.original_height;
+    const originalWidth = post?.original_width ?? 640;
+    const originalHeight = post?.original_height ?? 640;
 
     const engagement = `💬 ${replyCount.toLocaleString()}&emsp;❤️ ${likeCount.toLocaleString()}`;
     const description = `${caption}\n\n${engagement}`;
