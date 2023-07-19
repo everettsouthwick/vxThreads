@@ -1,8 +1,7 @@
 import express from 'express';
 import { errorTemplate, postTemplate } from '../templates/templates';
 import { sanitizeUri } from '../helpers/uri';
-import { getUser } from '../services/userService';
-import { buildUserMetadata } from '../services/metadataService';
+import { getUserMetadata } from '../services/userService';
 
 const router = express.Router();
 
@@ -10,8 +9,7 @@ router.get('/@:username', async (req, res) => {
     const url = sanitizeUri(req.path);
 
     try {
-        const user = await getUser(url);
-        const metadata = buildUserMetadata(user, url);
+        const metadata = await getUserMetadata(url);
         const html = postTemplate(metadata);
 
         return res.status(200).send(html);
