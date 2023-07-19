@@ -20,7 +20,10 @@ async function getPost(url: URL): Promise<Post> {
     const posts = threadItems.filter((item: any) => item.post !== null && item.post !== undefined);
 
     const post = posts[posts.length - 1].post;
-    return buildPost(post, url);
+    const builtPost = buildPost(post, url);
+    const consolidatedPost = consolidatePost(builtPost);
+    console.log(consolidatedPost);
+    return consolidatePost(builtPost);
 }
 
 async function getPostId(url: URL): Promise<string> {
@@ -37,13 +40,13 @@ async function getPostId(url: URL): Promise<string> {
 }
 
 function buildPost(post: any, url: URL): Post {
-    let profilePicUrl = post?.user?.profile_pic_url ?? '';
-    let username = post?.user?.username ?? '';
-    let caption = post?.caption?.text ?? '';
-    let likeCount = post?.like_count ?? 0;
-    let replyCount = post?.text_post_app_info?.direct_reply_count ?? 0;
+    const profilePicUrl = post?.user?.profile_pic_url ?? '';
+    const username = post?.user?.username ?? '';
+    const caption = post?.caption?.text ?? '';
+    const likeCount = post?.like_count ?? 0;
+    const replyCount = post?.text_post_app_info?.direct_reply_count ?? 0;
     const imageUrls = post?.image_versions2?.candidates?.map(
-        (image: any) => image?.url,
+        (image: any) => image,
     ) ?? [];
 
     let videoUrls = [];
@@ -53,46 +56,10 @@ function buildPost(post: any, url: URL): Post {
         videoUrls = post?.video_versions?.map((video: any) => video?.url) ?? [];
     }
 
-    let originalWidth = post?.original_width ?? 640;
-    let originalHeight = post?.original_height ?? 640;
+    const originalWidth = post?.original_width ?? 640;
+    const originalHeight = post?.original_height ?? 640;
 
     const sharedPosts: Post[] = buildNestedPost(post, url) ?? [];
-
-    sharedPosts.forEach(p2 => {
-        profilePicUrl = profilePicUrl || p2.profilePicUrl;
-        username = username || p2.username;
-        imageUrls.unshift(...p2.imageUrls);
-        videoUrls.unshift(...p2.videoUrls);
-        originalHeight > p2.originalHeight ? originalHeight : p2.originalHeight;
-        originalWidth > p2.originalWidth ? originalWidth : p2.originalWidth;
-
-        if (p2.isQuoted) {
-            caption = `${caption}\n\n⤵️ Quoting @${p2.username}\n\n${p2.caption}`
-        } else {
-            caption === '' ? caption = p2.caption : caption;
-            likeCount += p2.likeCount;
-            replyCount += p2.replyCount;
-        }
-
-        p2.sharedPosts.forEach(p3 => {
-            profilePicUrl = profilePicUrl || p3.profilePicUrl;
-            username = username || p3.username;
-            imageUrls.unshift(...p3.imageUrls);
-            videoUrls.unshift(...p3.videoUrls);
-            originalHeight > p3.originalHeight ? originalHeight : p3.originalHeight;
-            originalWidth > p3.originalWidth ? originalWidth : p3.originalWidth;
-
-            if (p3.isQuoted) {
-                caption = `${caption}\n\n⤵️ Quoting @${p3.username}\n\n${p3.caption}`
-            } else {
-                caption === '' ? caption = p3.caption : caption;
-                likeCount += p3.likeCount;
-                replyCount += p3.replyCount;
-            }
-            imageUrls.unshift(...p3.imageUrls);
-            videoUrls.unshift(...p3.videoUrls);
-        });
-    });
 
     const engagement = `💬 ${replyCount.toLocaleString()}&emsp;❤️ ${likeCount.toLocaleString()}`;
     const description = `${caption}\n\n${engagement}`;
@@ -134,4 +101,51 @@ function buildNestedPost(post: any, url: URL): Post[] {
     }
 
     return posts;
+}
+
+function consolidatePost(post: Post): Post {
+    if (post.sharedPosts.length === 0) {
+        return post;
+    }
+
+    post.sharedPosts.forEach(p => {
+        if (p.isQuoted) {
+            post.caption = `${post.caption}\n\n⤵️ Quoting @${p.username}\n\n${p.caption}`;
+        } else if (p.isRepost) {
+            if (post.caption === '') {
+                post.profilePicUrl = p.profilePicUrl;
+                post.username = p.username;
+                post.caption = p.caption;
+            }
+            post.likeCount += p.likeCount;
+            post.replyCount += p.replyCount;
+        }
+        post.imageUrls.unshift(...p.imageUrls);
+        post.videoUrls.unshift(...p.videoUrls);
+        post.originalHeight > p.originalHeight ? post.originalHeight : p.originalHeight;
+        post.originalWidth > p.originalWidth ? post.originalWidth : p.originalWidth;
+
+        p.sharedPosts.forEach(p2 => {
+            if (p2.isQuoted) {
+                post.caption = `${post.caption}\n\n⤵️ Quoting @${p2.username}\n\n${p2.caption}`;
+            } else if (p2.isRepost) {
+                if (post.caption === '') {
+                    post.profilePicUrl = p2.profilePicUrl;
+                    post.username = p2.username;
+                    post.caption = p2.caption;
+                }
+                post.likeCount += p2.likeCount;
+                post.replyCount += p2.replyCount;
+            }
+            post.imageUrls.unshift(...p2.imageUrls);
+            post.videoUrls.unshift(...p2.videoUrls);
+            post.originalHeight > p2.originalHeight ? post.originalHeight : p2.originalHeight;
+            post.originalWidth > p2.originalWidth ? post.originalWidth : p2.originalWidth;
+        });
+    });
+
+    post.engagement = `💬 ${post.replyCount.toLocaleString()}&emsp;❤️ ${post.likeCount.toLocaleString()}`;
+    post.description = `${post.caption}\n\n${post.engagement}`;
+
+    return post;
 }
