@@ -2,9 +2,9 @@ import { Constants } from "../constants/constants";
 import { ProxyManager } from "../managers/proxyManager";
 
 export function buildPostMetadata(post: any, url: URL): string[] {
-    const profilePicUrl = post.user.profile_pic_url;
-    const username = post.user.username;
-    const caption = post.caption.text;
+    const profilePicUrl = post.user?.profile_pic_url ?? '';
+    const username = post.user?.username ?? '';
+    const caption = post.caption?.text ?? '';
     const likeCount = post.like_count ?? 0;
     const replyCount = post.text_post_app_info.direct_reply_count ?? 0;
     const images = post.image_versions2.candidates.map(
