@@ -19,7 +19,9 @@ export async function getPost(threadsPath: string) {
     }
 
     const getPostResponseJson = await getPostResponse.json();
-    return getPostResponseJson.data.data.containing_thread.thread_items[0].post;
+    const threadItems = getPostResponseJson.data.data.containing_thread.thread_items;
+    const posts = threadItems.filter((item: any) => item.post !== null && item.post !== undefined);
+    return posts.length > 0 ? posts[posts.length - 1].post : null;
 }
 
 export function generateMetadata(post: any, threadsPath: string) {
@@ -32,7 +34,13 @@ export function generateMetadata(post: any, threadsPath: string) {
     const images = post.image_versions2.candidates.map(
         (image: any) => image.url,
     );
-    const videos = post.video_versions.map((video: any) => video.url);
+
+    let videos = [];
+    if (post.carousel_media !== null && post.carousel_media !== undefined) {
+        videos = post.carousel_media.map((media: any) => media.video_versions[0].url);
+    } else {
+        videos = post.video_versions.map((video: any) => video.url);
+    }
     const originalWidth = post.original_width;
     const originalHeight = post.original_height;
 
