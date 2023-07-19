@@ -46,7 +46,7 @@ function buildPost(post: any, url: URL): Post {
     const likeCount = post?.like_count ?? 0;
     const replyCount = post?.text_post_app_info?.direct_reply_count ?? 0;
     const imageUrls = post?.image_versions2?.candidates?.map(
-        (image: any) => image,
+        (image: any) => image?.url ?? [],
     ) ?? [];
 
     let videoUrls = [];
