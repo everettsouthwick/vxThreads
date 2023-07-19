@@ -20,8 +20,6 @@ async function getPost(url: URL): Promise<Post> {
     const posts = threadItems.filter((item: any) => item.post !== null && item.post !== undefined);
 
     const post = posts[posts.length - 1].post;
-    const builtPost = buildPost(post, url);
-    console.log(builtPost.sharedPosts[0]);
     return buildPost(post, url);
 }
 
@@ -39,8 +37,8 @@ async function getPostId(url: URL): Promise<string> {
 }
 
 function buildPost(post: any, url: URL): Post {
-    const profilePicUrl = post?.user?.profile_pic_url ?? '';
-    const username = post?.user?.username ?? '';
+    let profilePicUrl = post?.user?.profile_pic_url ?? '';
+    let username = post?.user?.username ?? '';
     let caption = post?.caption?.text ?? '';
     let likeCount = post?.like_count ?? 0;
     let replyCount = post?.text_post_app_info?.direct_reply_count ?? 0;
@@ -64,6 +62,15 @@ function buildPost(post: any, url: URL): Post {
         if (firstLevelPost.isQuoted) {
             caption = `${caption}\n\n⤵️ Quoting @${firstLevelPost.username}\n\n${firstLevelPost.caption}`
         } else {
+            if (profilePicUrl === '') {
+                profilePicUrl = firstLevelPost.profilePicUrl;
+            }
+            if (username === '') {
+                username = firstLevelPost.username;
+            }
+            if (caption === '') {
+                caption = firstLevelPost.caption;
+            }
             likeCount += firstLevelPost.likeCount;
             replyCount += firstLevelPost.replyCount;
         }
