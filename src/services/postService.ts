@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 import config from '../config.json';
 import { getPostIdPayload, getPostPayload } from '../api/fetcher';
 import { getPostIdHeaders, getPostHeaders } from '../api/headers';
+import { Constants } from '../constants/constants';
 
 export async function getPost(threadsPath: string) {
     const postId = await getPostId(threadsPath);
@@ -35,16 +36,18 @@ export function generateMetadata(post: any, threadsPath: string) {
     const originalWidth = post.original_width;
     const originalHeight = post.original_height;
 
-    const description = `${caption}\n\n💬 ${replyCount.toLocaleString()}&emsp;❤️ ${likeCount.toLocaleString()}`;
+    const engagement = `💬 ${replyCount.toLocaleString()}&emsp;❤️ ${likeCount.toLocaleString()}`;
+    const description = `${caption}\n\n${engagement}`;
 
     const metadata: string[] = [];
 
     metadata.push(
         `<link rel="canonical" href="${threadsUri}"/>`,
+        `<link href="https://vxthreads.net/oembed?text=${encodeURIComponent(engagement)}&url=${encodeURIComponent(threadsUri)}" rel="alternate" type="application/json+oembed" title="vxThreads" />`,
         `<meta http-equiv="refresh" content="0;url=${threadsUri}"/>`,
         `<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />`,
-        `<meta property="theme-color" content="#30d158" />`,
-        `<meta property="og:site_name" content="vxThreads" />`,
+        `<meta property="theme-color" content="${Constants.SuccessColor}" />`,
+        `<meta property="og:site_name" content="${Constants.SiteName}" />`,
         `<meta property="og:title" content="@${username}" />`,
         `<meta property="og:description" content="${description}" />`,
         `<meta property="og:url" content="${threadsUri}" />`,

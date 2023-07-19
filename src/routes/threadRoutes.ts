@@ -4,7 +4,7 @@ import { errorTemplate, postTemplate } from '../templates/templates';
 
 const router = express.Router();
 
-router.get('*', async (req, res) => {
+router.get('/:username/post/*', async (req, res) => {
     const threadsPath = req.path;
 
     try {
