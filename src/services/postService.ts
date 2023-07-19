@@ -21,7 +21,10 @@ async function getPost(url: URL): Promise<Post> {
 
     const post = posts[posts.length - 1].post;
     let postObj: Post;
-    if (post.text_post_app_info?.share_info?.reposted_post?.text_post_app_info?.share_info?.quoted_post !== null) {
+    if (post.text_post_app_info?.share_info?.quoted_post !== null) {
+        postObj = buildQuotedPost(post, url);
+    }
+    else if (post.text_post_app_info?.share_info?.reposted_post?.text_post_app_info?.share_info?.quoted_post !== null) {
         postObj = buildQuotedPost(post.text_post_app_info.share_info.reposted_post, url);
     } else if (post.text_post_app_info?.share_info?.reposted_post !== null) {
         postObj = buildPost(post.text_post_app_info.share_info.reposted_post, url);
