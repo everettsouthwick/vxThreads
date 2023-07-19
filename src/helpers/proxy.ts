@@ -10,7 +10,7 @@ export class ProxyManager {
     private index: number;
 
     constructor() {
-        this.config = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'config.json'), 'utf-8'));
+        this.config = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../config.json'), 'utf-8'));
         this.index = 0;
     }
 

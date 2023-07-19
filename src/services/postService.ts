@@ -1,6 +1,4 @@
-import config from '../config.json';
 import { buildPostPayload } from '../constants/body';
-import { Constants } from '../constants/constants';
 import { buildPostGraphQlHeaders } from '../constants/headers';
 import { postBulkRouteDefinitions, postGraphQl } from './threadsService';
 
