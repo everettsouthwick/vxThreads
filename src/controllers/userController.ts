@@ -7,7 +7,7 @@ import { buildUserMetadata } from '../services/metadataService';
 const router = express.Router();
 
 router.get('/@:username', async (req, res) => {
-    let url = sanitizeUri(req.path);
+    const url = sanitizeUri(req.path);
 
     try {
         const user = await getUser(url);
@@ -18,7 +18,7 @@ router.get('/@:username', async (req, res) => {
     }
     catch (error: any) {
         console.error(error);
-        const html = errorTemplate(error.status, error.statusText, `${url}`);
+        const html = errorTemplate(error.statusCode, error.message, `${url}`);
         return res.status(200).send(html);
     }
 });

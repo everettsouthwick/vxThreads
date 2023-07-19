@@ -18,7 +18,7 @@ router.get('/t/:shortcode', async (req, res) => {
     }
     catch (error: any) {
         console.error(error);
-        const html = errorTemplate(error.status, error.statusText, `${url}`);
+        const html = errorTemplate(error.statusCode, error.message, `${url}`);
         return res.status(200).send(html);
     }
 });
@@ -34,7 +34,7 @@ router.get('/:username/post/:shortcode', async (req, res) => {
         return res.status(200).send(html);
     } catch (error: any) {
         console.error(error);
-        const html = errorTemplate(error.status, error.statusText, `${url}`);
+        const html = errorTemplate(error.statusCode, error.message, `${url}`);
         return res.status(200).send(html);
     }
 });
