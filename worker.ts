@@ -32,4 +32,3 @@ async function buffer(request: Request): Promise<Response> {
 
 	return new Response(videoResponse.body, responseInit);
 }
-
