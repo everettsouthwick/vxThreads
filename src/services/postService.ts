@@ -15,7 +15,7 @@ async function getPost(url: URL): Promise<Post> {
     const postGraphQlBody = buildPostPayload(postId);
 
     const postGraphQlResponse = await postGraphQl(postGraphQlHeaders, postGraphQlBody);
-  
+
     const threadItems = postGraphQlResponse.data.data.containing_thread.thread_items;
     const posts = threadItems.filter((item: any) => item.post !== null && item.post !== undefined);
 
@@ -24,7 +24,7 @@ async function getPost(url: URL): Promise<Post> {
     if (post.text_post_app_info?.share_info?.quoted_post !== null) {
         postObj = buildQuotedPost(post, url);
     }
-    else if (post.text_post_app_info?.share_info?.reposted_post?.text_post_app_info?.share_info?.quoted_post !== null) {
+    else if (post.text_post_app_info?.share_info?.reposted_post !== null && post.text_post_app_info?.share_info?.text_post_app_info?.share_info?.quoted_post !== null) {
         postObj = buildQuotedPost(post.text_post_app_info.share_info.reposted_post, url);
     } else if (post.text_post_app_info?.share_info?.reposted_post !== null) {
         postObj = buildPost(post.text_post_app_info.share_info.reposted_post, url);
