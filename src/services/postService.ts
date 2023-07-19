@@ -21,11 +21,13 @@ async function getPost(url: URL): Promise<Post> {
 
     const post = posts[posts.length - 1].post;
     let postObj: Post;
-    if (post.text_post_app_info?.share_info?.reposted_post !== null) {
+    if (post.text_post_app_info?.share_info?.quoted_post !== null) {
+        postObj = buildQuotedPost(post, url);
+    }
+    else if (post.text_post_app_info?.share_info?.reposted_post !== null && post.text_post_app_info?.share_info?.text_post_app_info?.share_info?.quoted_post !== null) {
+        postObj = buildQuotedPost(post.text_post_app_info.share_info.reposted_post, url);
+    } else if (post.text_post_app_info?.share_info?.reposted_post !== null) {
         postObj = buildPost(post.text_post_app_info.share_info.reposted_post, url);
-    } else if (post.text_post_app_info?.share_info?.quoted_post !== null) {
-        // TODO: Handle quoted posts, for now just default
-        postObj = buildPost(post, url);
     } else {
         postObj = buildPost(post, url);
     }
@@ -86,3 +88,36 @@ function buildPost(post: any, url: URL): Post {
     };
 }
 
+function buildQuotedPost(post: any, url: URL): Post {
+    const originalPost = buildPost(post, url);
+    const quotedPost = buildPost(post.text_post_app_info.share_info.quoted_post, url);
+
+    if (quotedPost.hasImage) {
+        originalPost.hasImage = true;
+        originalPost.imageUrls.unshift(...quotedPost.imageUrls);
+    }
+
+    if (quotedPost.hasVideo) {
+        originalPost.hasVideo = true;
+        originalPost.videoUrls.unshift(...quotedPost.videoUrls);
+    }
+
+    originalPost.description = `${originalPost.caption}\n\n⤵️ Quoting @${quotedPost.username}\n\n${quotedPost.caption}\n\n${originalPost.engagement}`
+
+    return {
+        profilePicUrl: originalPost.profilePicUrl,
+        username: originalPost.username,
+        caption: originalPost.caption,
+        likeCount: originalPost.likeCount,
+        replyCount: originalPost.replyCount,
+        imageUrls: originalPost.imageUrls,
+        hasImage: originalPost.hasImage,
+        videoUrls: originalPost.videoUrls,
+        hasVideo: originalPost.hasVideo,
+        originalWidth: originalPost.originalWidth,
+        originalHeight: originalPost.originalHeight,
+        engagement: originalPost.engagement,
+        description: originalPost.description,
+        url: originalPost.url,
+    }
+}

@@ -1,21 +1,22 @@
 import { Constants } from "../constants/constants"
 
-export const errorTemplate = (status: string, statusText: string, threadsUri: string) => `
+export const errorTemplate = (url: URL) => `
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="canonical" href="${threadsUri}"/>
-        <meta http-equiv="refresh" content="0;url=${threadsUri}"/>
+        <title>${Constants.Title}</title>
+        <link rel="canonical" href="${url}"/>
+        <meta http-equiv="refresh" content="0;url=${url}"/>
         <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
         <meta property="theme-color" content="${Constants.ErrorColor}" />
         <meta property="og:title" content="${Constants.Title}" />
-        <meta property="og:description" content="${status} ${statusText}" />
-        <meta property="og:url" content="${threadsUri}" />
+        <meta property="og:description" content="${Constants.ErrorMessage}" />
+        <meta property="og:url" content="${url}" />
     </head>
 </html>
 `;
 
-export const postTemplate = (metadata: string[]) => `
+export const successTemplate = (metadata: string[]) => `
 <!DOCTYPE html>
 <html>
     <head>
