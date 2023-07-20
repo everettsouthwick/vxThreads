@@ -139,10 +139,11 @@ function consolidateRawPost(post: Post): Post {
                 post.profilePicUrl = p.profilePicUrl;
                 post.username = p.username;
                 post.caption = p.caption;
+                post.likeCount += p.likeCount;
+                post.replyCount += p.replyCount;
             }
         }
-        post.likeCount += p.likeCount;
-        post.replyCount += p.replyCount;
+
         post.imageUrls.unshift(...p.imageUrls);
         post.videoUrls.unshift(...p.videoUrls);
         post.originalHeight = post.originalHeight > p.originalHeight
@@ -151,30 +152,6 @@ function consolidateRawPost(post: Post): Post {
         post.originalWidth = post.originalWidth > p.originalWidth
             ? post.originalWidth
             : p.originalWidth;
-
-        p.sharedPosts.forEach((p2) => {
-            if (p2.isQuoted) {
-                if (p2.caption !== post.caption) {
-                    post.caption = `${post.caption}\n\n⤵️ Quoting @${p2.username}\n\n${p2.caption}`;
-                }
-            } else if (p2.isRepost) {
-                if (post.caption === '') {
-                    post.profilePicUrl = p2.profilePicUrl;
-                    post.username = p2.username;
-                    post.caption = p2.caption;
-                }
-            }
-            post.likeCount += p2.likeCount;
-            post.replyCount += p2.replyCount;
-            post.imageUrls.unshift(...p2.imageUrls);
-            post.videoUrls.unshift(...p2.videoUrls);
-            post.originalHeight = post.originalHeight > p2.originalHeight
-                ? post.originalHeight
-                : p2.originalHeight;
-            post.originalWidth = post.originalWidth > p2.originalWidth
-                ? post.originalWidth
-                : p2.originalWidth;
-        });
     });
 
     post.hasImage = post.imageUrls.length > 0;

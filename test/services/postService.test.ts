@@ -172,8 +172,8 @@ describe('buildPost', () => {
             profilePicUrl: 'https://scontent.cdninstagram.com/v/t51.2885-19/358047728_274818111888708_7050060929439619083_n.jpg?stp=dst-jpg_s150x150&_nc_ht=scontent.cdninstagram.com&_nc_cat=100&_nc_ohc=RL95IlXGvWQAX_jYGWC&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfBkl-oWN_HiW2Ne9zuS3n9NGQgqG80VqrFxbJoXq6HyfQ&oe=64BC8804&_nc_sid=10d13b',
             username: 'nike',
             caption: 'Today’s the day. Who’s excited for Wemby’s NBA debut? 🙋\n\n⤵️ Quoting @nba\n\nOne more sleep until…',
-            likeCount: 22259,
-            replyCount: 1170,
+            likeCount: 4830,
+            replyCount: 369,
             imageUrls: [
                 "https://scontent.cdninstagram.com/v/t51.2885-15/358514620_2631437670343406_2773814262600093647_n.jpg?stp=dst-jpg_e15&_nc_ht=scontent.cdninstagram.com&_nc_cat=102&_nc_ohc=aukYxeKIIXwAX-GjgoS&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfDq8VbxSRAaDI56lXJ8aXvX6UDUO2YjoqyfnzRQ3bOOEg&oe=64BA3498&_nc_sid=10d13b",
                 "https://scontent.cdninstagram.com/v/t51.2885-15/358514620_2631437670343406_2773814262600093647_n.jpg?stp=dst-jpg_e15_p480x480&_nc_ht=scontent.cdninstagram.com&_nc_cat=102&_nc_ohc=aukYxeKIIXwAX-GjgoS&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfBidi52fuKOyrBAT_aOcajslZ5W3AwSjKVXAz3KiCasUQ&oe=64BA3498&_nc_sid=10d13b",
@@ -195,8 +195,8 @@ describe('buildPost', () => {
             hasVideo: true,
             originalWidth: 640,
             originalHeight: 800,
-            engagement: '💬 1,170&emsp;❤️ 22,259',
-            description: 'Today’s the day. Who’s excited for Wemby’s NBA debut? 🙋\n\n⤵️ Quoting @nba\n\nOne more sleep until…\n\n💬 1,170&emsp;❤️ 22,259',
+            engagement: '💬 369&emsp;❤️ 4,830',
+            description: 'Today’s the day. Who’s excited for Wemby’s NBA debut? 🙋\n\n⤵️ Quoting @nba\n\nOne more sleep until…\n\n💬 369&emsp;❤️ 4,830',
             url: videoQuotePostJson._source,
             sharedPosts: [
                 {
