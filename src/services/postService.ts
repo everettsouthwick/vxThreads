@@ -58,19 +58,21 @@ function buildRawPost(post: any, url: URL): Post {
     const caption = post?.caption?.text ?? '';
     const likeCount = post?.like_count ?? 0;
     const replyCount = post?.text_post_app_info?.direct_reply_count ?? 0;
-    const imageUrls =
-        post?.image_versions2?.candidates?.map(
-            (image: any) => image?.url ?? [],
-        ) ?? [];
+    let imageUrls: string[] = [];
+    let videoUrls: string[] = [];
 
-    let videoUrls = [];
     if (post?.carousel_media) {
-        videoUrls =
-            post?.carousel_media[0]?.video_versions?.map(
-                (video: any) => video?.url,
-            ) ?? [];
+        post?.carousel_media.forEach((media: any) => {
+            if (media?.image_versions2?.candidates?.[0]?.url) {
+                imageUrls.push(media?.image_versions2?.candidates?.[0]?.url);
+            }
+            if (media?.video_versions?.[0]?.url) {
+                videoUrls.push(media?.video_versions?.[0]?.url);
+            }
+        });
     } else {
-        videoUrls = post?.video_versions?.map((video: any) => video?.url) ?? [];
+        imageUrls = post?.image_versions2?.candidates?.[0]?.url ? [post.image_versions2.candidates[0].url] : [];
+        videoUrls = post?.video_versions?.[0]?.url ? [post.video_versions[0].url] : [];
     }
 
     const originalWidth = post?.original_width ?? 640;
