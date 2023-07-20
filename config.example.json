@@ -1,4 +1,5 @@
 {
+    "port": 8080,
     "proxies": [
         "https://host"
     ]

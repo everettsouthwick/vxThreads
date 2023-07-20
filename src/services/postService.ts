@@ -9,63 +9,74 @@ export async function getPostMetadata(url: URL): Promise<string[]> {
     return buildPostMetadata(post);
 }
 
-async function getPost(url: URL): Promise<Post> {
+export async function getPost(url: URL): Promise<Post> {
     const postId = await getPostId(url);
     const postGraphQlHeaders = buildPostGraphQlHeaders();
     const postGraphQlBody = buildPostPayload(postId);
 
-    const postGraphQlResponse = await postGraphQl(postGraphQlHeaders, postGraphQlBody);
+    const postGraphQlResponse = await postGraphQl(
+        postGraphQlHeaders,
+        postGraphQlBody,
+    );
 
-    const threadItems = postGraphQlResponse.data.data.containing_thread.thread_items;
-    const posts = threadItems.filter((item: any) => item.post !== null && item.post !== undefined);
+    const threadItems =
+        postGraphQlResponse.data.data.containing_thread.thread_items;
+    const posts = threadItems.filter(
+        (item: any) => item.post !== null && item.post !== undefined,
+    );
 
     const post = posts[posts.length - 1].post;
-    let postObj: Post;
-    if (post.text_post_app_info?.share_info?.quoted_post !== null) {
-        postObj = buildQuotedPost(post, url);
-    }
-    else if (post.text_post_app_info?.share_info?.reposted_post !== null && post.text_post_app_info?.share_info?.text_post_app_info?.share_info?.quoted_post !== null) {
-        postObj = buildQuotedPost(post.text_post_app_info.share_info.reposted_post, url);
-    } else if (post.text_post_app_info?.share_info?.reposted_post !== null) {
-        postObj = buildPost(post.text_post_app_info.share_info.reposted_post, url);
-    } else {
-        postObj = buildPost(post, url);
-    }
-    return postObj;
+    return buildPost(post, url);
 }
 
-async function getPostId(url: URL): Promise<string> {
+export async function getPostId(url: URL): Promise<string> {
     const bulkRouteDefinitionsResponse = await postBulkRouteDefinitions(url);
     let postId;
-    if ('redirect_result' in bulkRouteDefinitionsResponse.payload.payloads[url.pathname].result) {
-        postId = bulkRouteDefinitionsResponse.payload.payloads[url.pathname].result.redirect_result.exports.rootView.props
-            .post_id;
+    if (
+        'redirect_result' in
+        bulkRouteDefinitionsResponse.payload.payloads[url.pathname].result
+    ) {
+        postId =
+            bulkRouteDefinitionsResponse.payload.payloads[url.pathname].result
+                .redirect_result.exports.rootView.props.post_id;
     } else {
-        postId = bulkRouteDefinitionsResponse.payload.payloads[url.pathname].result.exports.rootView.props
-            .post_id;
+        postId =
+            bulkRouteDefinitionsResponse.payload.payloads[url.pathname].result
+                .exports.rootView.props.post_id;
     }
     return postId;
 }
 
-function buildPost(post: any, url: URL): Post {
-    const profilePicUrl = post.user?.profile_pic_url ?? '';
-    const username = post.user?.username ?? '';
-    const caption = post.caption?.text ?? '';
-    const likeCount = post.like_count ?? 0;
-    const replyCount = post.reply_count ?? 0;
-    const imageUrls = post.image_versions2.candidates.map(
-        (image: any) => image.url,
-    );
+export function buildPost(post: any, url: URL): Post {
+    const rawPost = buildRawPost(post, url);
+    return consolidateRawPost(rawPost);
+}
+
+function buildRawPost(post: any, url: URL): Post {
+    const profilePicUrl = post?.user?.profile_pic_url ?? '';
+    const username = post?.user?.username ?? '';
+    const caption = post?.caption?.text ?? '';
+    const likeCount = post?.like_count ?? 0;
+    const replyCount = post?.text_post_app_info?.direct_reply_count ?? 0;
+    const imageUrls =
+        post?.image_versions2?.candidates?.map(
+            (image: any) => image?.url ?? [],
+        ) ?? [];
 
     let videoUrls = [];
-    if (post.carousel_media !== null) {
-        videoUrls = post.carousel_media[0].video_versions.map((video: any) => video.url);
+    if (post?.carousel_media) {
+        videoUrls =
+            post?.carousel_media[0]?.video_versions?.map(
+                (video: any) => video?.url,
+            ) ?? [];
     } else {
-        videoUrls = post.video_versions.map((video: any) => video.url);
+        videoUrls = post?.video_versions?.map((video: any) => video?.url) ?? [];
     }
 
-    const originalWidth = post.original_width;
-    const originalHeight = post.original_height;
+    const originalWidth = post?.original_width ?? 640;
+    const originalHeight = post?.original_height ?? 640;
+
+    const sharedPosts: Post[] = buildRawNestedPost(post, url) ?? [];
 
     const engagement = `💬 ${replyCount.toLocaleString()}&emsp;❤️ ${likeCount.toLocaleString()}`;
     const description = `${caption}\n\n${engagement}`;
@@ -85,39 +96,68 @@ function buildPost(post: any, url: URL): Post {
         engagement: engagement,
         description: description,
         url: url.toString(),
+        sharedPosts: sharedPosts,
+        isQuoted: false,
+        isRepost: false,
     };
 }
 
-function buildQuotedPost(post: any, url: URL): Post {
-    const originalPost = buildPost(post, url);
-    const quotedPost = buildPost(post.text_post_app_info.share_info.quoted_post, url);
+function buildRawNestedPost(post: any, url: URL): Post[] {
+    let posts: Post[] = [];
 
-    if (quotedPost.hasImage) {
-        originalPost.hasImage = true;
-        originalPost.imageUrls.unshift(...quotedPost.imageUrls);
+    if (post?.text_post_app_info?.share_info?.quoted_post) {
+        let nestedPost = buildRawPost(
+            post?.text_post_app_info?.share_info?.quoted_post,
+            url,
+        );
+        nestedPost.isQuoted = true;
+        posts.push(nestedPost);
     }
 
-    if (quotedPost.hasVideo) {
-        originalPost.hasVideo = true;
-        originalPost.videoUrls.unshift(...quotedPost.videoUrls);
+    if (post?.text_post_app_info?.share_info?.reposted_post) {
+        let nestedPost = buildRawPost(
+            post?.text_post_app_info?.share_info?.reposted_post,
+            url,
+        );
+        nestedPost.isRepost = true;
+        posts.push(nestedPost);
     }
 
-    originalPost.description = `${originalPost.caption}\n\n⤵️ Quoting @${quotedPost.username}\n\n${quotedPost.caption}\n\n${originalPost.engagement}`
+    return posts;
+}
 
-    return {
-        profilePicUrl: originalPost.profilePicUrl,
-        username: originalPost.username,
-        caption: originalPost.caption,
-        likeCount: originalPost.likeCount,
-        replyCount: originalPost.replyCount,
-        imageUrls: originalPost.imageUrls,
-        hasImage: originalPost.hasImage,
-        videoUrls: originalPost.videoUrls,
-        hasVideo: originalPost.hasVideo,
-        originalWidth: originalPost.originalWidth,
-        originalHeight: originalPost.originalHeight,
-        engagement: originalPost.engagement,
-        description: originalPost.description,
-        url: originalPost.url,
+function consolidateRawPost(post: Post): Post {
+    if (post.sharedPosts.length === 0) {
+        return post;
     }
+
+    post.sharedPosts.forEach((p) => {
+        if (p.isQuoted) {
+            post.caption = `${post.caption}\n\n⤵️ Quoting @${p.username}\n\n${p.caption}`;
+        } else if (p.isRepost) {
+            if (post.caption === '') {
+                post.profilePicUrl = p.profilePicUrl;
+                post.username = p.username;
+                post.caption = p.caption;
+                post.likeCount += p.likeCount;
+                post.replyCount += p.replyCount;
+            }
+        }
+
+        post.imageUrls.unshift(...p.imageUrls);
+        post.videoUrls.unshift(...p.videoUrls);
+        post.originalHeight = post.originalHeight > p.originalHeight
+            ? post.originalHeight
+            : p.originalHeight;
+        post.originalWidth = post.originalWidth > p.originalWidth
+            ? post.originalWidth
+            : p.originalWidth;
+    });
+
+    post.hasImage = post.imageUrls.length > 0;
+    post.hasVideo = post.videoUrls.length > 0;
+    post.engagement = `💬 ${post.replyCount.toLocaleString()}&emsp;❤️ ${post.likeCount.toLocaleString()}`;
+    post.description = `${post.caption}\n\n${post.engagement}`;
+
+    return post;
 }

@@ -1,10 +1,18 @@
 import { ConfigManager } from './configManager';
 
 export class ProxyManager {
+    private static instance: ProxyManager;
     private index: number;
 
-    constructor() {
+    private constructor() {
         this.index = 0;
+    }
+
+    static getInstance(): ProxyManager {
+        if (!ProxyManager.instance) {
+            ProxyManager.instance = new ProxyManager();
+        }
+        return ProxyManager.instance;
     }
 
     getNextProxy(): string {

@@ -11,7 +11,9 @@ export class ConfigManager {
     private config: Config;
 
     private constructor() {
-        this.config = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../config.json'), 'utf-8'));
+        this.config = JSON.parse(
+            fs.readFileSync(path.resolve(__dirname, '../config.json'), 'utf-8'),
+        );
     }
 
     public static getInstance(): ConfigManager {
