@@ -146,8 +146,8 @@ function consolidateRawPost(post: Post): Post {
             }
         }
 
-        post.imageUrls.unshift(...p.imageUrls);
-        post.videoUrls.unshift(...p.videoUrls);
+        post.imageUrls.push(...p.imageUrls);
+        post.videoUrls.push(...p.videoUrls);
         post.originalHeight = post.originalHeight > p.originalHeight
             ? post.originalHeight
             : p.originalHeight;
