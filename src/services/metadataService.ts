@@ -1,7 +1,7 @@
-import { Constants } from "../constants/constants";
-import { ProxyManager } from "../managers/proxyManager";
-import { Post } from "../models/post";
-import { User } from "../models/user";
+import { Constants } from '../constants/constants';
+import { ProxyManager } from '../managers/proxyManager';
+import { Post } from '../models/post';
+import { User } from '../models/user';
 
 export function buildPostMetadata(post: Post): string[] {
     const metadata: string[] = [];
@@ -37,10 +37,16 @@ function buildDefaultPostMetadata(post: Post): string[] {
 }
 
 function buildVideoPostMetadata(post: Post): string[] {
-    const videoUrl = `https://${ProxyManager.getInstance().getNextProxy()}/${encodeURIComponent(post.videoUrls[0])}`;
+    const videoUrl = `https://${ProxyManager.getInstance().getNextProxy()}/${encodeURIComponent(
+        post.videoUrls[0],
+    )}`;
 
     return [
-        `<link href="https://vxthreads.net/oembed?text=${encodeURIComponent(post.description ?? Constants.DefaultAuthorName)}&url=${encodeURIComponent(post.url.toString() ?? Constants.DefaultAuthorUrl)}" rel="alternate" type="application/json+oembed" title="vxThreads" />`,
+        `<link href="https://vxthreads.net/oembed?text=${encodeURIComponent(
+            post.description ?? Constants.DefaultAuthorName,
+        )}&url=${encodeURIComponent(
+            post.url.toString() ?? Constants.DefaultAuthorUrl,
+        )}" rel="alternate" type="application/json+oembed" title="vxThreads" />`,
         `<meta property="twitter:card" content="player" />`,
         `<meta property="twitter:player" content="${videoUrl}">`,
         `<meta property="twitter:player:width" content="${post.originalWidth}">`,

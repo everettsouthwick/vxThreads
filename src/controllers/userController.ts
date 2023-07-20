@@ -13,8 +13,7 @@ router.get('/@:username', async (req, res) => {
         const html = successTemplate(metadata);
 
         return res.status(200).send(html);
-    }
-    catch (error: any) {
+    } catch (error: any) {
         console.error(error);
         const html = errorTemplate(url);
         return res.status(200).send(html);

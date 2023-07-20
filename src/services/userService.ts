@@ -14,14 +14,18 @@ export async function getUser(url: URL): Promise<User> {
     const userGraphQlHeaders = buildUserGraphQlHeaders();
     const userGraphQlBody = buildUserPayload(userId);
 
-    const postGraphQlResponse = await postGraphQl(userGraphQlHeaders, userGraphQlBody);
+    const postGraphQlResponse = await postGraphQl(
+        userGraphQlHeaders,
+        userGraphQlBody,
+    );
 
     return buildUser(postGraphQlResponse.data.userData.user, url);
 }
 
 async function getUserId(url: URL): Promise<string> {
     const bulkRouteDefinitionsResponse = await postBulkRouteDefinitions(url);
-    return bulkRouteDefinitionsResponse.payload.payloads[url.pathname].result.exports.rootView.props.user_id;
+    return bulkRouteDefinitionsResponse.payload.payloads[url.pathname].result
+        .exports.rootView.props.user_id;
 }
 
 function buildUser(user: any, url: URL): User {
@@ -43,5 +47,5 @@ function buildUser(user: any, url: URL): User {
         engagement: engagement,
         description: description,
         url: url.toString(),
-    }
+    };
 }

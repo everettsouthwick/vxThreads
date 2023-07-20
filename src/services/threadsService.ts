@@ -1,6 +1,9 @@
 const fetch = require('node-fetch');
 import { HttpRequestError } from '../errors/httpRequestError';
-import { buildBulkRouteDefinitionsHeaders, buildPostGraphQlHeaders } from '../constants/headers';
+import {
+    buildBulkRouteDefinitionsHeaders,
+    buildPostGraphQlHeaders,
+} from '../constants/headers';
 import { buildBulkRouteDefinitionsBody } from '../constants/body';
 
 export async function postBulkRouteDefinitions(url: URL): Promise<any> {
@@ -14,7 +17,10 @@ export async function postBulkRouteDefinitions(url: URL): Promise<any> {
     );
 
     if (!bulkRouteDefinitionsResponse.ok) {
-        throw new HttpRequestError(bulkRouteDefinitionsResponse.status, 'https://www.threads.net/ajax/bulk-route-definitions/');
+        throw new HttpRequestError(
+            bulkRouteDefinitionsResponse.status,
+            'https://www.threads.net/ajax/bulk-route-definitions/',
+        );
     }
 
     const responseText = await bulkRouteDefinitionsResponse.text();
@@ -23,16 +29,17 @@ export async function postBulkRouteDefinitions(url: URL): Promise<any> {
 }
 
 export async function postGraphQl(headers: any, body: string): Promise<any> {
-    const graphQlResponse = await fetch('https://www.threads.net/api/graphql',
-        {
-            method: 'POST',
-            headers: headers,
-            body: body
-        }
-    );
+    const graphQlResponse = await fetch('https://www.threads.net/api/graphql', {
+        method: 'POST',
+        headers: headers,
+        body: body,
+    });
 
     if (!graphQlResponse.ok) {
-        throw new HttpRequestError(graphQlResponse.status, 'https://www.threads.net/api/graphql');
+        throw new HttpRequestError(
+            graphQlResponse.status,
+            'https://www.threads.net/api/graphql',
+        );
     }
 
     const responseJson = await graphQlResponse.json();

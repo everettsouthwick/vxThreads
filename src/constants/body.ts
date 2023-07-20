@@ -49,4 +49,3 @@ export function buildUserPayload(userId: string): string {
         )
         .join('&');
 }
-

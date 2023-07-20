@@ -1,0 +1,41 @@
+{
+    "_source": "https://www.threads.net/@zuck/post/Cu2Ep0XP9RT",
+    "user": {
+        "pk": "314216",
+        "profile_pic_url": "https://scontent.cdninstagram.com/v/t51.2885-19/357376107_1330597350674698_8884059223384672080_n.jpg?stp=dst-jpg_s150x150&_nc_ht=scontent.cdninstagram.com&_nc_cat=1&_nc_ohc=amA3P59eu8kAX8wBYOr&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfDqZJVtOS6vHAIQbQ5bbPjhuiFQc8zNMcxtptUG-ijWxw&oe=64BCAFC0&_nc_sid=10d13b",
+        "username": "zuck",
+        "id": null,
+        "is_verified": true
+    },
+    "image_versions2": {
+        "candidates": []
+    },
+    "original_width": 612,
+    "original_height": 612,
+    "code": "Cu2Ep0XP9RT",
+    "video_versions": [],
+    "carousel_media": null,
+    "carousel_media_count": null,
+    "pk": "3149725455301465171",
+    "has_audio": null,
+    "text_post_app_info": {
+        "link_preview_attachment": null,
+        "share_info": {
+            "quoted_post": null,
+            "reposted_post": null,
+            "is_reposted_by_viewer": false
+        },
+        "reply_to_author": null,
+        "is_post_unavailable": false,
+        "direct_reply_count": 2425
+    },
+    "caption": {
+        "text": "Open sourcing Llama 2 today. What do you want to see researchers and businesses build with our next-gen large language model?"
+    },
+    "is_fb_only": null,
+    "is_internal_only": null,
+    "taken_at": 1689696555,
+    "like_count": 16919,
+    "media_overlay_info": null,
+    "id": "3149725455301465171_314216"
+}
