@@ -44,7 +44,7 @@ function buildVideoPostMetadata(post: Post): string[] {
   const videoUrl = `https://${ProxyManager.getInstance().getNextProxy()}/${encodeURIComponent(post.videoUrls[0])}`;
 
   return [
-    `<link href="https://vxthreads.net/oembed?text=${encodeURIComponent(
+    `<link href="https://vxthreads.net/api/oembed?text=${encodeURIComponent(
       post.description ?? Constants.DefaultAuthorName
     )}&url=${encodeURIComponent(
       post.url.toString() ?? Constants.DefaultAuthorUrl
@@ -63,7 +63,7 @@ function buildVideoPostMetadata(post: Post): string[] {
 
 function buildLinkPostMetadata(post: Post): string[] {
   return [
-    `<link href="https://vxthreads.net/oembed?text=${encodeURIComponent(
+    `<link href="https://vxthreads.net/api/oembed?text=${encodeURIComponent(
       post.attachedDisplayUrl ?? Constants.DefaultAuthorName
     )}&url=${encodeURIComponent(
       post.attachedUrl ?? Constants.DefaultAuthorUrl

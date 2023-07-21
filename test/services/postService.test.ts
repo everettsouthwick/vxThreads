@@ -10,28 +10,14 @@ import videoPostJson from '../fixtures/videoPost.json';
 import videoQuoteImagePostJson from '../fixtures/videoQuoteImagePost.json';
 import videoQuotePostJson from '../fixtures/videoQuotePost.json';
 
-
-jest.mock('../../src/services/threadsService', () => ({
-    postGraphQl: jest.fn().mockImplementation(() => Promise.resolve(textPostJson)),
-    postBulkRouteDefinitions: jest.fn().mockImplementation(() => Promise.resolve({ payload: { payloads: { ['test-path']: { result: { exports: { rootView: { props: { post_id: 'test-post-id' } } } } } } } }))
-}));
-
-jest.mock('../../src/constants/headers', () => ({
-    buildPostGraphQlHeaders: jest.fn().mockReturnValue('test-headers'),
-}));
-
-jest.mock('../../src/constants/body', () => ({
-    buildPostPayload: jest.fn().mockReturnValue('test-body'),
-}));
-
-jest.mock('../../src/services/metadataService', () => ({
-    buildPostMetadata: jest.fn().mockImplementation((post) => post),
+jest.mock('../../src/services/canvasService', () => ({
+    stitchImages: jest.fn(() => Promise.resolve('mock-canvas')),
 }));
 
 describe('buildPost', () => {
-    it('gets the correct post from a post containing multiple images', () => {
+    it('gets the correct post from a post containing multiple images', async () => {
         const postUrl = new URL(imageCarouselPostJson._source);
-        const result = buildPost(imageCarouselPostJson, postUrl);
+        const result = await buildPost(imageCarouselPostJson, postUrl);
 
         expect(result).toEqual({
             profilePicUrl: 'https://scontent.cdninstagram.com/v/t51.2885-19/358511392_816713223024195_6650998157517761865_n.jpg?stp=dst-jpg_s150x150&_nc_ht=scontent.cdninstagram.com&_nc_cat=1&_nc_ohc=SElTWAUjXgwAX--8cJU&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfDPHmTG4vIaryUKoVgDxoWlxMBvh20AvdhNGxJnN9tLAQ&oe=64BD9322&_nc_sid=10d13b',
@@ -47,6 +33,8 @@ describe('buildPost', () => {
                 "https://scontent.cdninstagram.com/v/t51.2885-15/358122536_284543050732929_2024918076154498262_n.jpg?stp=dst-jpg_e35&_nc_ht=scontent.cdninstagram.com&_nc_cat=109&_nc_ohc=_WO03Uet-jUAX9EXGEK&edm=APs17CUBAAAA&ccb=7-5&ig_cache_key=MzE0MTMxMjk5ODI3NzQzNzE3Nw%3D%3D.2-ccb7-5&oh=00_AfBZeFubyS1l_cAOOkZfOT31gzaI-l7diP6OjjuScAXI9w&oe=64BCEC1D&_nc_sid=10d13b"
             ],
             hasImage: true,
+            canvasUrl: 'mock-canvas',
+            hasCanvas: true,
             videoUrls: [],
             hasVideo: false,
             attachedUrl: null,
@@ -63,9 +51,9 @@ describe('buildPost', () => {
         });
     });
 
-    it('gets the correct post from a post containing a single image', () => {
+    it('gets the correct post from a post containing a single image', async () => {
         const postUrl = new URL(imagePostJson._source);
-        const result = buildPost(imagePostJson, postUrl);
+        const result = await buildPost(imagePostJson, postUrl);
 
         expect(result).toEqual({
             profilePicUrl: 'https://scontent.cdninstagram.com/v/t51.2885-19/357376107_1330597350674698_8884059223384672080_n.jpg?stp=dst-jpg_s150x150&_nc_ht=scontent.cdninstagram.com&_nc_cat=1&_nc_ohc=amA3P59eu8kAX-F1ha2&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfD5qBkmiXChhlg6u418saVj9YGAy4844wxT2FaOw45gBg&oe=64BCAFC0&_nc_sid=10d13b',
@@ -77,6 +65,8 @@ describe('buildPost', () => {
                 "https://scontent.cdninstagram.com/v/t51.2885-15/361559968_297695422712140_3208342140432914929_n.jpg?stp=dst-jpg_e35&_nc_ht=scontent.cdninstagram.com&_nc_cat=104&_nc_ohc=5QCKx3ra0qsAX8UXsYH&edm=APs17CUBAAAA&ccb=7-5&ig_cache_key=MzE0ODI5NDM1NTg4MzA2MzAxOA%3D%3D.2-ccb7-5&oh=00_AfD09C5BFdarAv0zWbmY73M8m8NAS-ss-23V4ItJMRtVaA&oe=64BC63B4&_nc_sid=10d13b"
             ],
             hasImage: true,
+            canvasUrl: '',
+            hasCanvas: false,
             videoUrls: [],
             hasVideo: false,
             attachedUrl: null,
@@ -93,9 +83,9 @@ describe('buildPost', () => {
         });
     });
 
-    it('gets the correct post from a post containing a quote with a single image', () => {
+    it('gets the correct post from a post containing a quote with a single image', async () => {
         const postUrl = new URL(imageQuotePost._source);
-        const result = buildPost(imageQuotePost, postUrl);
+        const result = await buildPost(imageQuotePost, postUrl);
 
         expect(result).toEqual({
             profilePicUrl: 'https://scontent.cdninstagram.com/v/t51.2885-19/358252796_802168321360859_3735229788456250120_n.jpg?stp=dst-jpg_s150x150&_nc_ht=scontent.cdninstagram.com&_nc_cat=111&_nc_ohc=kkeGwtSNv4AAX9n_zkC&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfC16ZKsbeBBwK0xSKN9NWtD5paPA8U7k8SXkexuMQ8L7w&oe=64BD0268&_nc_sid=10d13b',
@@ -107,6 +97,8 @@ describe('buildPost', () => {
                 'https://scontent.cdninstagram.com/v/t51.2885-15/360883918_1004989067180967_47617861468865567_n.jpg?stp=dst-jpg_e35&_nc_ht=scontent.cdninstagram.com&_nc_cat=103&_nc_ohc=BG3s05Wmu_wAX8SPvhD&edm=APs17CUBAAAA&ccb=7-5&ig_cache_key=MzE0NjcyMzUxMTA0NDU2MjMwOQ%3D%3D.2-ccb7-5&oh=00_AfAYePg2fGm8RmTQEfW-pV74PL3FUYzNHNVe_BL-lF4d8g&oe=64BDC155&_nc_sid=10d13b'
             ],
             hasImage: true,
+            canvasUrl: '',
+            hasCanvas: false,
             videoUrls: [],
             hasVideo: false,
             attachedUrl: null,
@@ -128,6 +120,8 @@ describe('buildPost', () => {
                         "https://scontent.cdninstagram.com/v/t51.2885-15/360883918_1004989067180967_47617861468865567_n.jpg?stp=dst-jpg_e35&_nc_ht=scontent.cdninstagram.com&_nc_cat=103&_nc_ohc=BG3s05Wmu_wAX8SPvhD&edm=APs17CUBAAAA&ccb=7-5&ig_cache_key=MzE0NjcyMzUxMTA0NDU2MjMwOQ%3D%3D.2-ccb7-5&oh=00_AfAYePg2fGm8RmTQEfW-pV74PL3FUYzNHNVe_BL-lF4d8g&oe=64BDC155&_nc_sid=10d13b"
                     ],
                     hasImage: true,
+                    canvasUrl: '',
+                    hasCanvas: false,
                     videoUrls: [],
                     hasVideo: false,
                     attachedUrl: null,
@@ -148,9 +142,9 @@ describe('buildPost', () => {
         });
     });
 
-    it('gets the correct post from a post containing a link', () => {
+    it('gets the correct post from a post containing a link', async () => {
         const postUrl = new URL(linkPostJson._source);
-        const result = buildPost(linkPostJson, postUrl);
+        const result = await buildPost(linkPostJson, postUrl);
 
         expect(result).toEqual({
             profilePicUrl: 'https://scontent.cdninstagram.com/v/t51.2885-19/358047728_274818111888708_7050060929439619083_n.jpg?stp=dst-jpg_s150x150&_nc_ht=scontent.cdninstagram.com&_nc_cat=1&_nc_ohc=RL95IlXGvWQAX-eI_1B&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfCSerB6IaKKWK83Qu8hAotU7itoTPBxAj1Qmz8KRN0ehQ&oe=64C07C84&_nc_sid=10d13b',
@@ -162,6 +156,8 @@ describe('buildPost', () => {
                 'https://scontent.cdninstagram.com/v/t51.36329-15/362103564_318097450557255_448238792141882352_n.jpg?_nc_cat=1&ccb=1-7&_nc_sid=8ae9d6&_nc_ohc=LDM_BypgqpQAX_WO-uY&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.cdninstagram.com&oh=00_AfAogQB8dEofNEgbLDB39RWpnx4abqNXGHap7Bxm2AWOOQ&oe=64C030A6&dl=1',
             ],
             hasImage: true,
+            canvasUrl: '',
+            hasCanvas: false,
             videoUrls: [],
             hasVideo: false,
             attachedUrl: 'https://www.instagram.com/reel/Cu9kF_hu1Ss/',
@@ -178,9 +174,9 @@ describe('buildPost', () => {
         });
     });
 
-    it('gets the correct post from a post containing only text', () => {
+    it('gets the correct post from a post containing only text', async () => {
         const postUrl = new URL(textPostJson._source);
-        const result = buildPost(textPostJson, postUrl);
+        const result = await buildPost(textPostJson, postUrl);
 
         expect(result).toEqual({
             profilePicUrl: 'https://scontent.cdninstagram.com/v/t51.2885-19/357376107_1330597350674698_8884059223384672080_n.jpg?stp=dst-jpg_s150x150&_nc_ht=scontent.cdninstagram.com&_nc_cat=1&_nc_ohc=amA3P59eu8kAX8wBYOr&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfDqZJVtOS6vHAIQbQ5bbPjhuiFQc8zNMcxtptUG-ijWxw&oe=64BCAFC0&_nc_sid=10d13b',
@@ -190,6 +186,8 @@ describe('buildPost', () => {
             replyCount: 2425,
             imageUrls: [],
             hasImage: false,
+            canvasUrl: '',
+            hasCanvas: false,
             videoUrls: [],
             hasVideo: false,
             attachedUrl: null,
@@ -206,9 +204,9 @@ describe('buildPost', () => {
         });
     });
 
-    it('gets the correct post from a post containing a quote with only text', () => {
+    it('gets the correct post from a post containing a quote with only text', async () => {
         const postUrl = new URL(textQuotePostJson._source);
-        const result = buildPost(textQuotePostJson, postUrl);
+        const result = await buildPost(textQuotePostJson, postUrl);
 
         expect(result).toEqual({
             profilePicUrl: 'https://scontent.cdninstagram.com/v/t51.2885-19/358252796_802168321360859_3735229788456250120_n.jpg?stp=dst-jpg_s150x150&_nc_ht=scontent.cdninstagram.com&_nc_cat=111&_nc_ohc=kkeGwtSNv4AAX_jWSMZ&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfDaXPM8nMWtjFDikZfAgvNdDv_fO1CmXDwqsxbgrIpQCw&oe=64BD0268&_nc_sid=10d13b',
@@ -218,6 +216,8 @@ describe('buildPost', () => {
             replyCount: 206,
             imageUrls: [],
             hasImage: false,
+            canvasUrl: '',
+            hasCanvas: false,
             videoUrls: [],
             hasVideo: false,
             attachedUrl: null,
@@ -237,6 +237,8 @@ describe('buildPost', () => {
                     replyCount: 9,
                     imageUrls: [],
                     hasImage: false,
+                    canvasUrl: '',
+                    hasCanvas: false,
                     videoUrls: [],
                     hasVideo: false,
                     attachedUrl: null,
@@ -257,9 +259,9 @@ describe('buildPost', () => {
         });
     });
 
-    it('gets the correct post from a post containing multiple videos', () => {
+    it('gets the correct post from a post containing multiple videos', async () => {
         const postUrl = new URL(videoCarouselPostJson._source);
-        const result = buildPost(videoCarouselPostJson, postUrl);
+        const result = await buildPost(videoCarouselPostJson, postUrl);
 
         expect(result).toEqual({
             profilePicUrl: 'https://scontent.cdninstagram.com/v/t51.2885-19/358213019_186216880851983_5492715861352160006_n.jpg?stp=dst-jpg_s150x150&_nc_ht=scontent.cdninstagram.com&_nc_cat=1&_nc_ohc=FsYJCyjRr6kAX_KUNTh&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfBvhrVzYEu07HJeAsXxM5R4e5_TrNDtmFC9z1krnSkUtA&oe=64BD6AF0&_nc_sid=10d13b',
@@ -276,6 +278,8 @@ describe('buildPost', () => {
                 "https://scontent.cdninstagram.com/v/t51.2885-15/361184450_656039239751405_7549952016958515493_n.jpg?stp=dst-jpg_e15_p640x640&_nc_ht=scontent.cdninstagram.com&_nc_cat=105&_nc_ohc=HljxDb60wWUAX_wBBRe&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfD6svzjlnCLzazwdCBJtu0erhFecMEOzFFSiF0VzqzRjw&oe=64BA4927&_nc_sid=10d13b"
             ],
             hasImage: true,
+            canvasUrl: 'mock-canvas',
+            hasCanvas: true,
             videoUrls: [
                 "https://scontent.cdninstagram.com/v/t50.2886-16/361920504_1206750630022315_3493410980331511170_n.mp4?_nc_ht=scontent.cdninstagram.com&_nc_cat=107&_nc_ohc=dJ0B2ghljkYAX9XJAw_&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfBBmyAp3G1DfpKOyWG58B9tF47jDoKjuxnR1Rh74mhWVA&oe=64BA6E06&_nc_sid=10d13b",
                 "https://scontent.cdninstagram.com/v/t50.2886-16/361579782_818023446340217_8062441796634015478_n.mp4?_nc_ht=scontent.cdninstagram.com&_nc_cat=105&_nc_ohc=bUYvPXG7J7AAX9bQsKa&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfAv-MMEin98cgxewiMjYDNTKoNcdBYWeOIjFSbm2r_uxA&oe=64BA8D21&_nc_sid=10d13b",
@@ -298,9 +302,9 @@ describe('buildPost', () => {
         });
     });
 
-    it('gets the correct post from a post containing a single video', () => {
+    it('gets the correct post from a post containing a single video', async () => {
         const postUrl = new URL(videoPostJson._source);
-        const result = buildPost(videoPostJson, postUrl);
+        const result = await buildPost(videoPostJson, postUrl);
 
         expect(result).toEqual({
             profilePicUrl: 'https://scontent.cdninstagram.com/v/t51.2885-19/358047728_274818111888708_7050060929439619083_n.jpg?stp=dst-jpg_s150x150&_nc_ht=scontent.cdninstagram.com&_nc_cat=100&_nc_ohc=RL95IlXGvWQAX-bo-M1&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfDIobXPSfoj7f2RZOjvsuTGdE-ohZIO73ZD6tPdMOtp2g&oe=64BC8804&_nc_sid=10d13b',
@@ -312,6 +316,8 @@ describe('buildPost', () => {
                 "https://scontent.cdninstagram.com/v/t51.2885-15/361389838_987726848924849_5639668594460110207_n.jpg?stp=dst-jpg_e15&_nc_ht=scontent.cdninstagram.com&_nc_cat=105&_nc_ohc=tvohmhoICAUAX-8MDzz&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfAn0pixWUqzIE3z8JVNQr6gJ8KylKuP6KPshwFO43QoaA&oe=64BA0CF1&_nc_sid=10d13b"
             ],
             hasImage: true,
+            canvasUrl: '',
+            hasCanvas: false,
             videoUrls: [
                 "https://scontent.cdninstagram.com/v/t50.2886-16/10000000_762695492273731_9039734211839283778_n.mp4?_nc_ht=scontent.cdninstagram.com&_nc_cat=107&_nc_ohc=VhocpdPCRN8AX84YOA7&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfCsNSkiO0ngHcfQJQeT-gSuh-Q39G4EKzvwpRbvvMAYsw&oe=64BA0B68&_nc_sid=10d13b"
             ],
@@ -330,9 +336,9 @@ describe('buildPost', () => {
         });
     });
 
-    it('gets the correct post from a post containing a video and a quote with a single image', () => {
+    it('gets the correct post from a post containing a video and a quote with a single image', async () => {
         const postUrl = new URL(videoQuoteImagePostJson._source);
-        const result = buildPost(videoQuoteImagePostJson, postUrl);
+        const result = await buildPost(videoQuoteImagePostJson, postUrl);
 
         expect(result).toEqual({
             profilePicUrl: 'https://scontent.cdninstagram.com/v/t51.2885-19/358213019_186216880851983_5492715861352160006_n.jpg?stp=dst-jpg_s150x150&_nc_ht=scontent.cdninstagram.com&_nc_cat=1&_nc_ohc=FsYJCyjRr6kAX_rkgi-&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfDye7zYKNnoFhEAnBv8LyR8tXE0ESA9F2Q-wwzpvP7Vrg&oe=64BD6AF0&_nc_sid=10d13b',
@@ -345,6 +351,8 @@ describe('buildPost', () => {
                 'https://scontent.cdninstagram.com/v/t51.2885-15/361082313_1231105807598791_1839010678019596230_n.jpg?stp=dst-jpg_e35&_nc_ht=scontent.cdninstagram.com&_nc_cat=107&_nc_ohc=GaJ7lFk5c30AX9CU8_O&edm=APs17CUBAAAA&ccb=7-5&ig_cache_key=MzE0OTE4MjUyODg4ODgwMjc0OQ%3D%3D.2-ccb7-5&oh=00_AfBhiK-S62FGl1kJ6lf0tLpsrtYF4u7s3zbgZxhVDHL1wg&oe=64BCF087&_nc_sid=10d13b'
             ],
             hasImage: true,
+            canvasUrl: '',
+            hasCanvas: false,
             videoUrls: [
                 'https://scontent.cdninstagram.com/v/t50.2886-16/10000000_1750871975370143_2831251591199614234_n.mp4?_nc_ht=scontent.cdninstagram.com&_nc_cat=111&_nc_ohc=Sz80oT1r428AX-5DQNu&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfA8Xuw4W14gN9TzVZ55nfaBFpwj8SXuRpVtZhHyHkuIbQ&oe=64BA5C65&_nc_sid=10d13b'
             ],
@@ -368,6 +376,8 @@ describe('buildPost', () => {
                         'https://scontent.cdninstagram.com/v/t51.2885-15/361082313_1231105807598791_1839010678019596230_n.jpg?stp=dst-jpg_e35&_nc_ht=scontent.cdninstagram.com&_nc_cat=107&_nc_ohc=GaJ7lFk5c30AX9CU8_O&edm=APs17CUBAAAA&ccb=7-5&ig_cache_key=MzE0OTE4MjUyODg4ODgwMjc0OQ%3D%3D.2-ccb7-5&oh=00_AfBhiK-S62FGl1kJ6lf0tLpsrtYF4u7s3zbgZxhVDHL1wg&oe=64BCF087&_nc_sid=10d13b'
                     ],
                     hasImage: true,
+                    canvasUrl: '',
+                    hasCanvas: false,
                     videoUrls: [],
                     hasVideo: false,
                     attachedUrl: null,
@@ -388,9 +398,9 @@ describe('buildPost', () => {
         });
     })
 
-    it('gets the correct post from a post containing a quote with a single video', () => {
+    it('gets the correct post from a post containing a quote with a single video', async () => {
         const postUrl = new URL(videoQuotePostJson._source);
-        const result = buildPost(videoQuotePostJson, postUrl);
+        const result = await buildPost(videoQuotePostJson, postUrl);
 
         expect(result).toEqual({
             profilePicUrl: 'https://scontent.cdninstagram.com/v/t51.2885-19/358047728_274818111888708_7050060929439619083_n.jpg?stp=dst-jpg_s150x150&_nc_ht=scontent.cdninstagram.com&_nc_cat=100&_nc_ohc=RL95IlXGvWQAX_jYGWC&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfBkl-oWN_HiW2Ne9zuS3n9NGQgqG80VqrFxbJoXq6HyfQ&oe=64BC8804&_nc_sid=10d13b',
@@ -402,6 +412,8 @@ describe('buildPost', () => {
                 "https://scontent.cdninstagram.com/v/t51.2885-15/358514620_2631437670343406_2773814262600093647_n.jpg?stp=dst-jpg_e15&_nc_ht=scontent.cdninstagram.com&_nc_cat=102&_nc_ohc=aukYxeKIIXwAX-GjgoS&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfDq8VbxSRAaDI56lXJ8aXvX6UDUO2YjoqyfnzRQ3bOOEg&oe=64BA3498&_nc_sid=10d13b",
             ],
             hasImage: true,
+            canvasUrl: '',
+            hasCanvas: false,
             videoUrls: [
                 "https://scontent.cdninstagram.com/v/t50.2886-16/10000000_943161356801998_1044776441380441895_n.mp4?_nc_ht=scontent.cdninstagram.com&_nc_cat=110&_nc_ohc=SppcHWTFELAAX-ZXNmt&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfDqJgTi0COihzRwU9E4bBGWcEOKwPNbZH5w4A5-eejvYg&oe=64B9D9F3&_nc_sid=10d13b",
             ],
@@ -425,6 +437,8 @@ describe('buildPost', () => {
                         'https://scontent.cdninstagram.com/v/t51.2885-15/358514620_2631437670343406_2773814262600093647_n.jpg?stp=dst-jpg_e15&_nc_ht=scontent.cdninstagram.com&_nc_cat=102&_nc_ohc=aukYxeKIIXwAX-GjgoS&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfDq8VbxSRAaDI56lXJ8aXvX6UDUO2YjoqyfnzRQ3bOOEg&oe=64BA3498&_nc_sid=10d13b'
                     ],
                     hasImage: true,
+                    canvasUrl: '',
+                    hasCanvas: false,
                     videoUrls: [
                         'https://scontent.cdninstagram.com/v/t50.2886-16/10000000_943161356801998_1044776441380441895_n.mp4?_nc_ht=scontent.cdninstagram.com&_nc_cat=110&_nc_ohc=SppcHWTFELAAX-ZXNmt&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfDqJgTi0COihzRwU9E4bBGWcEOKwPNbZH5w4A5-eejvYg&oe=64B9D9F3&_nc_sid=10d13b'
                     ],

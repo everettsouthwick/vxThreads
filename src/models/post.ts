@@ -6,6 +6,8 @@ export interface Post {
   replyCount: number;
   imageUrls: string[];
   hasImage: boolean;
+  canvasUrl: string;
+  hasCanvas: boolean;
   videoUrls: string[];
   hasVideo: boolean;
   attachedUrl: string;
