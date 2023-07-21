@@ -12,6 +12,7 @@ jobs:
       - name: Check out source code
         uses: actions/checkout@v2
         with:
+          token: ${{ secrets.GH_TOKEN }}
           ref: ${{ github.head_ref || github.ref }}
 
       - name: Set up Node.js
