@@ -71,15 +71,23 @@ function buildRawPost(post: any, url: URL): Post {
             }
         });
     } else {
-        imageUrls = post?.image_versions2?.candidates?.[0]?.url ? [post.image_versions2.candidates[0].url] : [];
-        videoUrls = post?.video_versions?.[0]?.url ? [post.video_versions[0].url] : [];
+        imageUrls = post?.image_versions2?.candidates?.[0]?.url
+            ? [post.image_versions2.candidates[0].url]
+            : [];
+        videoUrls = post?.video_versions?.[0]?.url
+            ? [post.video_versions[0].url]
+            : [];
     }
 
-    const attachedUrl = post?.text_post_app_info?.link_preview_attachment?.url ?? null;
-    const attachedDisplayUrl = post?.text_post_app_info?.link_preview_attachment?.url ?? null;
+    const attachedUrl =
+        post?.text_post_app_info?.link_preview_attachment?.url ?? null;
+    const attachedDisplayUrl =
+        post?.text_post_app_info?.link_preview_attachment?.url ?? null;
     if (attachedUrl) {
         if (post?.text_post_app_info?.link_preview_attachment?.image_url) {
-            imageUrls.push(post.text_post_app_info.link_preview_attachment.image_url);
+            imageUrls.push(
+                post.text_post_app_info.link_preview_attachment.image_url,
+            );
         }
     }
 
@@ -159,12 +167,14 @@ function consolidateRawPost(post: Post): Post {
 
         post.imageUrls.push(...p.imageUrls);
         post.videoUrls.push(...p.videoUrls);
-        post.originalHeight = post.originalHeight > p.originalHeight
-            ? post.originalHeight
-            : p.originalHeight;
-        post.originalWidth = post.originalWidth > p.originalWidth
-            ? post.originalWidth
-            : p.originalWidth;
+        post.originalHeight =
+            post.originalHeight > p.originalHeight
+                ? post.originalHeight
+                : p.originalHeight;
+        post.originalWidth =
+            post.originalWidth > p.originalWidth
+                ? post.originalWidth
+                : p.originalWidth;
     });
 
     post.hasImage = post.imageUrls.length > 0;
