@@ -12,7 +12,10 @@ export class ConfigManager {
 
     private constructor() {
         this.config = JSON.parse(
-            fs.readFileSync(path.resolve(__dirname, '../../config.json'), 'utf-8'),
+            fs.readFileSync(
+                path.resolve(__dirname, '../../config.json'),
+                'utf-8',
+            ),
         );
     }
 
