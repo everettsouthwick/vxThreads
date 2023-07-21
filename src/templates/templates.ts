@@ -1,4 +1,4 @@
-import { Constants } from '../constants/constants';
+import { Constants } from "../constants/constants";
 
 export const errorTemplate = (url: URL) => `
 <!DOCTYPE html>
@@ -21,7 +21,7 @@ export const successTemplate = (metadata: string[]) => `
 <html>
     <head>
         <title>${Constants.Title}</title>
-        ${metadata.join('')}
+        ${metadata.join("")}
     </head>
 </html>
 `;
