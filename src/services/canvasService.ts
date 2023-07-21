@@ -1,4 +1,4 @@
-import { createCanvas, loadImage } from 'canvas';
+import { createCanvas, loadImage } from "canvas";
 
 export async function stitchImages(urls: string[]): Promise<string> {
   const images = await Promise.all(urls.map(url => loadImage(url)));

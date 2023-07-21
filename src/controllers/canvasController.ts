@@ -3,7 +3,7 @@ import { HttpRequestError } from "../errors/httpRequestError";
 import { stitchImages } from "../services/canvasService";
 const router = express.Router();
 
-router.post('/api/canvas', express.json(), async (req, res, next) => {
+router.post("/api/canvas", express.json(), async (req, res, next) => {
   const urls = req.body.urls;
 
   if (!req.body.urls) {
@@ -26,6 +26,3 @@ router.post('/api/canvas', express.json(), async (req, res, next) => {
 });
 
 export default router;
-
-
-
