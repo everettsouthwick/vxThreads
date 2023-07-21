@@ -72,12 +72,13 @@ function buildLinkPostMetadata(post: Post): string[] {
 }
 
 function buildImagePostMetadata(post: Post): string[] {
+  const imageUrl = post.hasCanvas ? post.canvasUrl : post.imageUrls[0];
   return [
     `<meta property="twitter:card" content="summary_large_image" />`,
-    `<meta property="twitter:image" content="${post.imageUrls[0]}" />`,
+    `<meta property="twitter:image" content="${imageUrl}" />`,
     `<meta property="twitter:image:width" content="${post.originalWidth}" />`,
     `<meta property="twitter:image:height" content="${post.originalHeight}" />`,
-    `<meta property="og:image" content="${post.imageUrls[0]}" />`,
+    `<meta property="og:image" content="${imageUrl}" />`,
     `<meta property="og:image:width" content="${post.originalWidth}" />`,
     `<meta property="og:image:height" content="${post.originalHeight}" />`
   ];
