@@ -19,7 +19,8 @@
         "build": "tsc",
         "dev": "ts-node src/app.ts",
         "prettier": "prettier --write \"src/**/*.ts\"",
-        "test": "jest --watch"
+        "test": "jest",
+        "test:watch": "jest --watch"
     },
     "devDependencies": {
         "@types/jest": "^29.5.3",
