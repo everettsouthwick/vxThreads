@@ -6,6 +6,7 @@
 [![Build][buildBadge]][build]
 [![CI][ciBadge]][ci]
 [![Prettier][prettierbadge]][prettier]
+[![License][licensebadge]][license]
 ---
 ### Simply prepend `vx` to `threads.net` (e.g. `vxthreads.net`) to get an embed of a Threads post!
 
