@@ -16,6 +16,10 @@ export function buildPostMetadata(post: Post): string[] {
         metadata.push(...buildTextPostMetadata(post));
     }
 
+    if (post.hasAttachedUrl && !post.hasVideo) {
+        metadata.push(...buildLinkPostMetadata(post));
+    }
+
     return metadata;
 }
 
@@ -56,6 +60,16 @@ function buildVideoPostMetadata(post: Post): string[] {
         `<meta property="og:video:width" content="${post.originalWidth}">`,
         `<meta property="og:video:height" content="${post.originalHeight}">`,
         `<meta property="og:video:type" content="video/mp4">`,
+    ];
+}
+
+function buildLinkPostMetadata(post: Post): string[] {
+    return [
+        `<link href="https://vxthreads.net/oembed?text=${encodeURIComponent(
+            post.attachedDisplayUrl ?? Constants.DefaultAuthorName,
+        )}&url=${encodeURIComponent(
+            post.attachedUrl ?? Constants.DefaultAuthorUrl,
+        )}" rel="alternate" type="application/json+oembed" title="vxThreads" />`,
     ];
 }
 

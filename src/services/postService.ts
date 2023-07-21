@@ -75,6 +75,14 @@ function buildRawPost(post: any, url: URL): Post {
         videoUrls = post?.video_versions?.[0]?.url ? [post.video_versions[0].url] : [];
     }
 
+    const attachedUrl = post?.text_post_app_info?.link_preview_attachment?.url ?? null;
+    const attachedDisplayUrl = post?.text_post_app_info?.link_preview_attachment?.url ?? null;
+    if (attachedUrl) {
+        if (post?.text_post_app_info?.link_preview_attachment?.image_url) {
+            imageUrls.push(post.text_post_app_info.link_preview_attachment.image_url);
+        }
+    }
+
     const originalWidth = post?.original_width ?? 640;
     const originalHeight = post?.original_height ?? 640;
 
@@ -93,6 +101,9 @@ function buildRawPost(post: any, url: URL): Post {
         hasImage: imageUrls.length > 0,
         videoUrls: videoUrls,
         hasVideo: videoUrls.length > 0,
+        attachedUrl: attachedUrl,
+        attachedDisplayUrl: attachedDisplayUrl,
+        hasAttachedUrl: attachedUrl !== null,
         originalWidth: originalWidth,
         originalHeight: originalHeight,
         engagement: engagement,

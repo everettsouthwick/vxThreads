@@ -2,6 +2,7 @@ import { buildPost } from '../../src/services/postService';
 import imageCarouselPostJson from '../fixtures/imageCarouselPost.json';
 import imagePostJson from '../fixtures/imagePost.json';
 import imageQuotePost from '../fixtures/imageQuotePost.json';
+import linkPostJson from '../fixtures/linkPost.json';
 import textPostJson from '../fixtures/textPost.json';
 import textQuotePostJson from '../fixtures/textQuotePost.json';
 import videoCarouselPostJson from '../fixtures/videoCarouselPost.json';
@@ -48,6 +49,9 @@ describe('buildPost', () => {
             hasImage: true,
             videoUrls: [],
             hasVideo: false,
+            attachedUrl: null,
+            attachedDisplayUrl: null,
+            hasAttachedUrl: false,
             originalWidth: 612,
             originalHeight: 612,
             engagement: '💬 1,018&emsp;❤️ 23,350',
@@ -75,6 +79,9 @@ describe('buildPost', () => {
             hasImage: true,
             videoUrls: [],
             hasVideo: false,
+            attachedUrl: null,
+            attachedDisplayUrl: null,
+            hasAttachedUrl: false,
             originalWidth: 4000,
             originalHeight: 3000,
             engagement: '💬 4,698&emsp;❤️ 56,543',
@@ -102,6 +109,9 @@ describe('buildPost', () => {
             hasImage: true,
             videoUrls: [],
             hasVideo: false,
+            attachedUrl: null,
+            attachedDisplayUrl: null,
+            hasAttachedUrl: false,
             originalWidth: 1057,
             originalHeight: 1030,
             engagement: '💬 267&emsp;❤️ 5,631',
@@ -120,6 +130,9 @@ describe('buildPost', () => {
                     hasImage: true,
                     videoUrls: [],
                     hasVideo: false,
+                    attachedUrl: null,
+                    attachedDisplayUrl: null,
+                    hasAttachedUrl: false,
                     originalWidth: 1057,
                     originalHeight: 1030,
                     engagement: '💬 10&emsp;❤️ 124',
@@ -127,11 +140,41 @@ describe('buildPost', () => {
                     url: imageQuotePost._source,
                     sharedPosts: [],
                     isQuoted: true,
-                    isRepost: false
+                    isRepost: false,
                 }
             ],
             isQuoted: false,
-            isRepost: false
+            isRepost: false,
+        });
+    });
+
+    it('gets the correct post from a post containing a link', () => {
+        const postUrl = new URL(linkPostJson._source);
+        const result = buildPost(linkPostJson, postUrl);
+
+        expect(result).toEqual({
+            profilePicUrl: 'https://scontent.cdninstagram.com/v/t51.2885-19/358047728_274818111888708_7050060929439619083_n.jpg?stp=dst-jpg_s150x150&_nc_ht=scontent.cdninstagram.com&_nc_cat=1&_nc_ohc=RL95IlXGvWQAX-eI_1B&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfCSerB6IaKKWK83Qu8hAotU7itoTPBxAj1Qmz8KRN0ehQ&oe=64C07C84&_nc_sid=10d13b',
+            username: 'nike',
+            caption: 'Watch Alex Morgan make things looks effortless 👇https://www.instagram.com/reel/Cu9kF_hu1Ss/?igshid=MzRlODBiNWFlZA==',
+            likeCount: 74,
+            replyCount: 3,
+            imageUrls: [
+                'https://scontent.cdninstagram.com/v/t51.36329-15/362103564_318097450557255_448238792141882352_n.jpg?_nc_cat=1&ccb=1-7&_nc_sid=8ae9d6&_nc_ohc=LDM_BypgqpQAX_WO-uY&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.cdninstagram.com&oh=00_AfAogQB8dEofNEgbLDB39RWpnx4abqNXGHap7Bxm2AWOOQ&oe=64C030A6&dl=1',
+            ],
+            hasImage: true,
+            videoUrls: [],
+            hasVideo: false,
+            attachedUrl: 'https://www.instagram.com/reel/Cu9kF_hu1Ss/',
+            attachedDisplayUrl: 'https://www.instagram.com/reel/Cu9kF_hu1Ss/',
+            hasAttachedUrl: true,
+            originalWidth: 612,
+            originalHeight: 612,
+            engagement: '💬 3&emsp;❤️ 74',
+            description: 'Watch Alex Morgan make things looks effortless 👇https://www.instagram.com/reel/Cu9kF_hu1Ss/?igshid=MzRlODBiNWFlZA==\n\n💬 3&emsp;❤️ 74',
+            url: linkPostJson._source,
+            sharedPosts: [],
+            isQuoted: false,
+            isRepost: false,
         });
     });
 
@@ -149,6 +192,9 @@ describe('buildPost', () => {
             hasImage: false,
             videoUrls: [],
             hasVideo: false,
+            attachedUrl: null,
+            attachedDisplayUrl: null,
+            hasAttachedUrl: false,
             originalWidth: 612,
             originalHeight: 612,
             engagement: '💬 2,425&emsp;❤️ 16,919',
@@ -164,8 +210,6 @@ describe('buildPost', () => {
         const postUrl = new URL(textQuotePostJson._source);
         const result = buildPost(textQuotePostJson, postUrl);
 
-        console.log(result);
-
         expect(result).toEqual({
             profilePicUrl: 'https://scontent.cdninstagram.com/v/t51.2885-19/358252796_802168321360859_3735229788456250120_n.jpg?stp=dst-jpg_s150x150&_nc_ht=scontent.cdninstagram.com&_nc_cat=111&_nc_ohc=kkeGwtSNv4AAX_jWSMZ&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfDaXPM8nMWtjFDikZfAgvNdDv_fO1CmXDwqsxbgrIpQCw&oe=64BD0268&_nc_sid=10d13b',
             username: 'ddlovato',
@@ -176,6 +220,9 @@ describe('buildPost', () => {
             hasImage: false,
             videoUrls: [],
             hasVideo: false,
+            attachedUrl: null,
+            attachedDisplayUrl: null,
+            hasAttachedUrl: false,
             originalWidth: 612,
             originalHeight: 612,
             engagement: '💬 206&emsp;❤️ 1,897',
@@ -192,6 +239,9 @@ describe('buildPost', () => {
                     hasImage: false,
                     videoUrls: [],
                     hasVideo: false,
+                    attachedUrl: null,
+                    attachedDisplayUrl: null,
+                    hasAttachedUrl: false,
                     originalWidth: 612,
                     originalHeight: 612,
                     engagement: '💬 9&emsp;❤️ 50',
@@ -199,11 +249,11 @@ describe('buildPost', () => {
                     url: textQuotePostJson._source,
                     sharedPosts: [],
                     isQuoted: true,
-                    isRepost: false
+                    isRepost: false,
                 }
             ],
             isQuoted: false,
-            isRepost: false
+            isRepost: false,
         });
     });
 
@@ -234,6 +284,9 @@ describe('buildPost', () => {
                 "https://scontent.cdninstagram.com/v/t50.2886-16/361837164_788942216227816_5382039591267100318_n.mp4?_nc_ht=scontent.cdninstagram.com&_nc_cat=104&_nc_ohc=peht7crg_fMAX9xs86f&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfApPPGdMf8JHBsN8JjLkYT6EkJCvgtPU2gEsks2d3GMHQ&oe=64BA575F&_nc_sid=10d13b"
             ],
             hasVideo: true,
+            attachedUrl: null,
+            attachedDisplayUrl: null,
+            hasAttachedUrl: false,
             originalWidth: 612,
             originalHeight: 612,
             engagement: '💬 77&emsp;❤️ 2,439',
@@ -263,6 +316,9 @@ describe('buildPost', () => {
                 "https://scontent.cdninstagram.com/v/t50.2886-16/10000000_762695492273731_9039734211839283778_n.mp4?_nc_ht=scontent.cdninstagram.com&_nc_cat=107&_nc_ohc=VhocpdPCRN8AX84YOA7&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfCsNSkiO0ngHcfQJQeT-gSuh-Q39G4EKzvwpRbvvMAYsw&oe=64BA0B68&_nc_sid=10d13b"
             ],
             hasVideo: true,
+            attachedUrl: null,
+            attachedDisplayUrl: null,
+            hasAttachedUrl: false,
             originalWidth: 640,
             originalHeight: 640,
             engagement: '💬 167&emsp;❤️ 2,835',
@@ -277,8 +333,6 @@ describe('buildPost', () => {
     it('gets the correct post from a post containing a video and a quote with a single image', () => {
         const postUrl = new URL(videoQuoteImagePostJson._source);
         const result = buildPost(videoQuoteImagePostJson, postUrl);
-
-        console.log(result);
 
         expect(result).toEqual({
             profilePicUrl: 'https://scontent.cdninstagram.com/v/t51.2885-19/358213019_186216880851983_5492715861352160006_n.jpg?stp=dst-jpg_s150x150&_nc_ht=scontent.cdninstagram.com&_nc_cat=1&_nc_ohc=FsYJCyjRr6kAX_rkgi-&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfDye7zYKNnoFhEAnBv8LyR8tXE0ESA9F2Q-wwzpvP7Vrg&oe=64BD6AF0&_nc_sid=10d13b',
@@ -295,6 +349,9 @@ describe('buildPost', () => {
                 'https://scontent.cdninstagram.com/v/t50.2886-16/10000000_1750871975370143_2831251591199614234_n.mp4?_nc_ht=scontent.cdninstagram.com&_nc_cat=111&_nc_ohc=Sz80oT1r428AX-5DQNu&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfA8Xuw4W14gN9TzVZ55nfaBFpwj8SXuRpVtZhHyHkuIbQ&oe=64BA5C65&_nc_sid=10d13b'
             ],
             hasVideo: true,
+            attachedUrl: null,
+            attachedDisplayUrl: null,
+            hasAttachedUrl: false,
             originalWidth: 1080,
             originalHeight: 1350,
             engagement: '💬 52&emsp;❤️ 2,292',
@@ -313,6 +370,9 @@ describe('buildPost', () => {
                     hasImage: true,
                     videoUrls: [],
                     hasVideo: false,
+                    attachedUrl: null,
+                    attachedDisplayUrl: null,
+                    hasAttachedUrl: false,
                     originalWidth: 1080,
                     originalHeight: 1350,
                     engagement: '💬 25&emsp;❤️ 794',
@@ -320,11 +380,11 @@ describe('buildPost', () => {
                     url: videoQuoteImagePostJson._source,
                     sharedPosts: [],
                     isQuoted: true,
-                    isRepost: false
+                    isRepost: false,
                 }
             ],
             isQuoted: false,
-            isRepost: false
+            isRepost: false,
         });
     })
 
@@ -346,6 +406,9 @@ describe('buildPost', () => {
                 "https://scontent.cdninstagram.com/v/t50.2886-16/10000000_943161356801998_1044776441380441895_n.mp4?_nc_ht=scontent.cdninstagram.com&_nc_cat=110&_nc_ohc=SppcHWTFELAAX-ZXNmt&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfDqJgTi0COihzRwU9E4bBGWcEOKwPNbZH5w4A5-eejvYg&oe=64B9D9F3&_nc_sid=10d13b",
             ],
             hasVideo: true,
+            attachedUrl: null,
+            attachedDisplayUrl: null,
+            hasAttachedUrl: false,
             originalWidth: 640,
             originalHeight: 800,
             engagement: '💬 369&emsp;❤️ 4,830',
@@ -366,6 +429,9 @@ describe('buildPost', () => {
                         'https://scontent.cdninstagram.com/v/t50.2886-16/10000000_943161356801998_1044776441380441895_n.mp4?_nc_ht=scontent.cdninstagram.com&_nc_cat=110&_nc_ohc=SppcHWTFELAAX-ZXNmt&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfDqJgTi0COihzRwU9E4bBGWcEOKwPNbZH5w4A5-eejvYg&oe=64B9D9F3&_nc_sid=10d13b'
                     ],
                     hasVideo: true,
+                    attachedUrl: null,
+                    attachedDisplayUrl: null,
+                    hasAttachedUrl: false,
                     originalWidth: 640,
                     originalHeight: 800,
                     engagement: '💬 801&emsp;❤️ 17,429',
@@ -373,7 +439,7 @@ describe('buildPost', () => {
                     url: 'https://www.threads.net/@nike/post/CuaNNJVvRga',
                     sharedPosts: [],
                     isQuoted: true,
-                    isRepost: false
+                    isRepost: false,
                 }
             ],
             isQuoted: false,

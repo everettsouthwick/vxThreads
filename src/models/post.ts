@@ -8,6 +8,9 @@ export interface Post {
     hasImage: boolean;
     videoUrls: string[];
     hasVideo: boolean;
+    attachedUrl: string;
+    attachedDisplayUrl: string;
+    hasAttachedUrl: boolean;
     originalWidth: number;
     originalHeight: number;
     engagement: string;
