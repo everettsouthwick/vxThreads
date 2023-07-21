@@ -3,7 +3,7 @@
 # Stage 1: Build
 FROM node:18-alpine AS builder
 
-RUN apk add --no-cache python3 make g++
+RUN apk add --no-cache python3 make g++ pkgconfig pixman-dev
 
 WORKDIR /app
 
