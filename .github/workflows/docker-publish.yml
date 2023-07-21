@@ -1,5 +1,4 @@
-
-name: Docker Publish
+name: Publish Docker Image
 
 on:
   push:
@@ -25,9 +24,13 @@ jobs:
         with:
           images: ecsouthwick/vxthreads
 
+      - name: Extract branch name
+        id: branch_name
+        run: echo "::set-output name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/})"
+
       - name: Set tag name
         id: tag_name
-        run: echo "::set-output name=TAG_NAME::$(if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then echo "latest"; else echo "${{ github.ref#refs/heads/ }}"; fi)"
+        run: echo "::set-output name=TAG_NAME::$(if [[ "${{ steps.branch_name.outputs.BRANCH_NAME }}" == "main" ]]; then echo "latest"; else echo "${{ steps.branch_name.outputs.BRANCH_NAME }}"; fi)"
 
       - name: Build and push Docker image
         uses: docker/build-push-action@ac9327eae2b366085ac7f6a2d02df8aa8ead720a
