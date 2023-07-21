@@ -44,7 +44,7 @@ function buildVideoPostMetadata(post: Post): string[] {
   const videoUrl = `https://${ProxyManager.getInstance().getNextProxy()}/${encodeURIComponent(post.videoUrls[0])}`;
 
   return [
-    `<link href="https://vxthreads.net/oembed?text=${encodeURIComponent(
+    `<link href="https://vxthreads.net/api/oembed?text=${encodeURIComponent(
       post.description ?? Constants.DefaultAuthorName
     )}&url=${encodeURIComponent(
       post.url.toString() ?? Constants.DefaultAuthorUrl
@@ -63,7 +63,7 @@ function buildVideoPostMetadata(post: Post): string[] {
 
 function buildLinkPostMetadata(post: Post): string[] {
   return [
-    `<link href="https://vxthreads.net/oembed?text=${encodeURIComponent(
+    `<link href="https://vxthreads.net/api/oembed?text=${encodeURIComponent(
       post.attachedDisplayUrl ?? Constants.DefaultAuthorName
     )}&url=${encodeURIComponent(
       post.attachedUrl ?? Constants.DefaultAuthorUrl
@@ -72,12 +72,13 @@ function buildLinkPostMetadata(post: Post): string[] {
 }
 
 function buildImagePostMetadata(post: Post): string[] {
+  const imageUrl = post.hasCanvas ? post.canvasUrl : post.imageUrls[0];
   return [
     `<meta property="twitter:card" content="summary_large_image" />`,
-    `<meta property="twitter:image" content="${post.imageUrls[0]}" />`,
+    `<meta property="twitter:image" content="${imageUrl}" />`,
     `<meta property="twitter:image:width" content="${post.originalWidth}" />`,
     `<meta property="twitter:image:height" content="${post.originalHeight}" />`,
-    `<meta property="og:image" content="${post.imageUrls[0]}" />`,
+    `<meta property="og:image" content="${imageUrl}" />`,
     `<meta property="og:image:width" content="${post.originalWidth}" />`,
     `<meta property="og:image:height" content="${post.originalHeight}" />`
   ];

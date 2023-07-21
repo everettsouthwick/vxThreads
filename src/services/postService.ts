@@ -3,6 +3,7 @@ import { buildPostGraphQlHeaders } from "../constants/headers";
 import { Post } from "../models/post";
 import { postBulkRouteDefinitions, postGraphQl } from "./threadsService";
 import { buildPostMetadata } from "./metadataService";
+import { stitchImages } from "./canvasService";
 
 export async function getPostMetadata(url: URL): Promise<string[]> {
   const post = await getPost(url);
@@ -35,12 +36,12 @@ export async function getPostId(url: URL): Promise<string> {
   return postId;
 }
 
-export function buildPost(post: any, url: URL): Post {
-  const rawPost = buildRawPost(post, url);
+export async function buildPost(post: any, url: URL): Promise<Post> {
+  const rawPost = await buildRawPost(post, url);
   return consolidateRawPost(rawPost);
 }
 
-function buildRawPost(post: any, url: URL): Post {
+async function buildRawPost(post: any, url: URL): Promise<Post> {
   const profilePicUrl = post?.user?.profile_pic_url ?? "";
   const username = post?.user?.username ?? "";
   const caption = post?.caption?.text ?? "";
@@ -63,6 +64,11 @@ function buildRawPost(post: any, url: URL): Post {
     videoUrls = post?.video_versions?.[0]?.url ? [post.video_versions[0].url] : [];
   }
 
+  let canvasUrl = "";
+  if (imageUrls.length > 1) {
+    canvasUrl = await stitchImages(imageUrls);
+  }
+
   const attachedUrl = post?.text_post_app_info?.link_preview_attachment?.url ?? null;
   const attachedDisplayUrl = post?.text_post_app_info?.link_preview_attachment?.url ?? null;
   if (attachedUrl) {
@@ -74,7 +80,7 @@ function buildRawPost(post: any, url: URL): Post {
   const originalWidth = post?.original_width ?? 640;
   const originalHeight = post?.original_height ?? 640;
 
-  const sharedPosts: Post[] = buildRawNestedPost(post, url) ?? [];
+  const sharedPosts: Post[] = (await buildRawNestedPost(post, url)) ?? [];
 
   const engagement = `💬 ${replyCount.toLocaleString()}&emsp;❤️ ${likeCount.toLocaleString()}`;
   const description = `${caption}\n\n${engagement}`;
@@ -89,6 +95,8 @@ function buildRawPost(post: any, url: URL): Post {
     hasImage: imageUrls.length > 0,
     videoUrls: videoUrls,
     hasVideo: videoUrls.length > 0,
+    canvasUrl: canvasUrl,
+    hasCanvas: imageUrls.length > 1,
     attachedUrl: attachedUrl,
     attachedDisplayUrl: attachedDisplayUrl,
     hasAttachedUrl: attachedUrl !== null,
@@ -103,17 +111,17 @@ function buildRawPost(post: any, url: URL): Post {
   };
 }
 
-function buildRawNestedPost(post: any, url: URL): Post[] {
+async function buildRawNestedPost(post: any, url: URL): Promise<Post[]> {
   let posts: Post[] = [];
 
   if (post?.text_post_app_info?.share_info?.quoted_post) {
-    let nestedPost = buildRawPost(post?.text_post_app_info?.share_info?.quoted_post, url);
+    let nestedPost = await buildRawPost(post?.text_post_app_info?.share_info?.quoted_post, url);
     nestedPost.isQuoted = true;
     posts.push(nestedPost);
   }
 
   if (post?.text_post_app_info?.share_info?.reposted_post) {
-    let nestedPost = buildRawPost(post?.text_post_app_info?.share_info?.reposted_post, url);
+    let nestedPost = await buildRawPost(post?.text_post_app_info?.share_info?.reposted_post, url);
     nestedPost.isRepost = true;
     posts.push(nestedPost);
   }

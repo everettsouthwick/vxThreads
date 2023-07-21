@@ -4,7 +4,7 @@ import { Constants } from "../constants/constants";
 import { OEmbed } from "../models/oEmbed";
 const router = express.Router();
 
-router.get("/oembed", async (req, res, next) => {
+router.get("/api/oembed", async (req, res, next) => {
   try {
     if (!req.query.url || !req.query.text) {
       return next(new HttpRequestError(400, "Missing query parameters"));
