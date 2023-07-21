@@ -4,6 +4,8 @@
 ![][icons]
 
 [![Build][buildBadge]][build]
+[![CI][ciBadge]][ci]
+[![Prettier][prettierbadge]][prettier]
 [![License][licensebadge]][license]
 ---
 ### Simply prepend `vx` to `threads.net` (e.g. `vxthreads.net`) to get an embed of a Threads post!
@@ -22,7 +24,11 @@
 
 [logo]: https://github.com/everettsouthwick/vxthreads/assets/8216991/659d7795-6da0-4073-af40-9ff14a1bc7c1
 [icons]: https://skillicons.dev/icons?i=ts,jest,docker,workers
-[build]: https://github.com/everettsouthwick/vxThreads/actions/workflows/docker-image.yml
-[buildBadge]: https://github.com/everettsouthwick/vxThreads/actions/workflows/docker-image.yml/badge.svg
+[build]: https://github.com/everettsouthwick/vxThreads/actions/workflows/docker-build.yml
+[buildBadge]: https://github.com/everettsouthwick/vxThreads/actions/workflows/docker-build.yml/badge.svg
+[ci]: https://github.com/everettsouthwick/vxThreads/actions/workflows/jest-test.yml
+[ciBadge]: https://github.com/everettsouthwick/vxThreads/actions/workflows/jest-test.yml/badge.svg
+[prettier]: https://github.com/everettsouthwick/vxThreads/actions/workflows/prettier-fix.yml
+[prettierBadge]: https://github.com/everettsouthwick/vxThreads/actions/workflows/prettier-fix.yml/badge.svg
 [license]: https://github.com/everettsouthwick/vxThreads/blob/main/LICENSE.md
 [licensebadge]: https://img.shields.io/github/license/everettsouthwick/vxThreads
