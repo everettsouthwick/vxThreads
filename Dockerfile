@@ -13,7 +13,7 @@ COPY . .
 RUN yarn build
 
 # Stage 2: Production
-FROM node:20-alpine
+FROM node:18-alpine
 ENV NODE_ENV=production
 WORKDIR /app
 
