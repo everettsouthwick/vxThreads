@@ -33,7 +33,7 @@ jobs:
         run: echo "::set-output name=TAG_NAME::$(if [[ "${{ steps.branch_name.outputs.BRANCH_NAME }}" == "main" ]]; then echo "latest"; else echo "${{ steps.branch_name.outputs.BRANCH_NAME }}"; fi)"
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true
