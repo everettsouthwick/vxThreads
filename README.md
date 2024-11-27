@@ -1,5 +1,9 @@
-![vxThreads][logo]
 # vxThreads
+
+![vxThreads][logo]
+
+👋 **Check out my AI project [Seren](https://getseren.com)!**
+
 ## Embed Threads text posts, images, videos on Discord and Telegram!
 ![][icons]
 
