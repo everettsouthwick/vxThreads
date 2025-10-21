@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # Stage 1: Build
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 WORKDIR /app
 
 COPY ["package.json", "yarn.lock", "./"]
@@ -13,7 +13,7 @@ COPY . .
 RUN yarn build
 
 # Stage 2: Production
-FROM node:20-alpine
+FROM node:22-alpine
 ENV NODE_ENV=production
 WORKDIR /app
 
