@@ -2,8 +2,6 @@
 
 ![vxThreads][logo]
 
-👋 **Check out my AI project [Seren](https://getseren.com)!**
-
 ## Embed Threads text posts, images, videos on Discord and Telegram!
 ![][icons]
 
@@ -36,3 +34,6 @@
 [prettierBadge]: https://github.com/everettsouthwick/vxThreads/actions/workflows/prettier-fix.yml/badge.svg
 [license]: https://github.com/everettsouthwick/vxThreads/blob/main/LICENSE.md
 [licensebadge]: https://img.shields.io/github/license/everettsouthwick/vxThreads
+
+---
+🔗 **More projects:** [Global Entry Alerts](https://www.goglobalentry.com) • [Step Tracker App](https://www.getstep.io) • [Portfolio](https://southwick.dev)
